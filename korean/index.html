@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korean Quest Flashcards — 30-Day Blitz</title>
+<meta name="description" content="Flashcards for every phrase in 30 Day Blitz Korean for Beginners: 6 weeks, 30 days, Hangul, travel, K-drama and social Korean.">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2A4A; --navy-2:#24365e; --gold:#E8A020; --gold-soft:#f6dca6;
+    --cream:#FAF6EE; --cream-2:#f1e9d8; --green:#3A7D44; --green-soft:#d8eadb;
+    --red:#b8483e; --ink:#1B2A4A; --muted:#6b7385; --card:#ffffff;
+    --shadow:0 10px 30px rgba(27,42,74,.14);
+    --ko:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body.kq{background:var(--cream);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .kq h1,.kq h2,.kq h3{font-family:'Playfair Display',Georgia,serif;margin:0}
+  .kq button{font-family:inherit;cursor:pointer}
+
+  /* Header */
+  .kq-hero{background:var(--navy);color:var(--cream);padding:28px 16px 64px;text-align:center;position:relative}
+  .kq-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--gold)}
+  .kq-back{position:absolute;left:16px;top:16px;color:var(--gold);text-decoration:none;font-size:14px;font-weight:600}
+  .kq-back:hover{text-decoration:underline}
+  .kq-hero h1{font-size:clamp(28px,6vw,42px);font-weight:800;letter-spacing:.2px;margin-top:18px}
+  .kq-hero h1 .flag{font-family:initial}
+  .kq-sub{margin-top:6px;color:var(--gold-soft);font-size:15px;letter-spacing:.5px}
+  .kq-brand{margin-top:4px;font-size:12px;color:#aab3c7;letter-spacing:2px;text-transform:uppercase}
+
+  .kq-wrap{max-width:760px;margin:-40px auto 0;padding:0 16px 48px;position:relative}
+
+  /* Tabs */
+  .kq-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+  .kq-tab{flex:0 0 auto;border:2px solid var(--navy);background:var(--card);color:var(--navy);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;white-space:nowrap;transition:all .15s}
+  .kq-tab .n{opacity:.6;font-weight:500;margin-left:4px}
+  .kq-tab:hover{border-color:var(--gold)}
+  .kq-tab.active{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+  .kq-tab.active .n{opacity:.8}
+  .kq-weektitle{font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:15px;margin:2px 4px 12px;min-height:22px}
+
+  /* Toolbar */
+  .kq-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .kq-tool{background:transparent;border:1.5px solid var(--navy);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600}
+  .kq-tool:hover{background:var(--navy);color:var(--cream)}
+  .kq-tool.on{background:var(--navy);color:var(--gold)}
+
+  /* Stats */
+  .kq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .kq-stat{background:var(--card);border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 2px 8px rgba(27,42,74,.06)}
+  .kq-stat b{display:block;font-family:'Playfair Display',serif;font-size:26px;line-height:1.1}
+  .kq-stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+  .kq-stat.known b{color:var(--green)}
+  .kq-stat.review b{color:var(--red)}
+
+  /* Progress */
+  .kq-progress{margin-bottom:22px}
+  .kq-progress-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;gap:8px}
+  .kq-progress-top strong{color:var(--green)}
+  .kq-bar{height:12px;background:var(--cream-2);border-radius:999px;overflow:hidden;position:relative}
+  .kq-bar .seen{position:absolute;inset:0 auto 0 0;background:var(--gold-soft);transition:width .35s}
+  .kq-bar .mast{position:absolute;inset:0 auto 0 0;background:var(--green);transition:width .35s}
+  .kq-overall{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  /* Card */
+  .kq-scene{perspective:1400px;margin-bottom:16px}
+  .kq-card{position:relative;width:100%;height:330px;cursor:pointer;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.2,1);outline:none}
+  .kq-card.flipped{transform:rotateY(180deg)}
+  .kq-card:focus-visible .kq-face{box-shadow:0 0 0 4px var(--gold),var(--shadow)}
+  .kq-face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 22px 28px;box-shadow:var(--shadow);text-align:center}
+  .kq-front{background:var(--card);border-top:6px solid var(--gold)}
+  .kq-back-face{background:var(--navy);color:var(--cream);transform:rotateY(180deg);border-top:6px solid var(--green)}
+  .kq-meta{position:absolute;top:14px;left:18px;font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--muted)}
+  .kq-back-face .kq-meta{color:#aab3c7}
+  .kq-status{position:absolute;top:12px;right:16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+  .kq-status.k{background:var(--green-soft);color:var(--green)}
+  .kq-status.a{background:#f4dcd8;color:var(--red)}
+  .kq-lang{font-size:11px;letter-spacing:3px;font-weight:700;color:var(--gold);margin-bottom:12px}
+  .kq-ko{font-family:var(--ko);font-weight:700;font-size:clamp(30px,7vw,46px);line-height:1.25;color:var(--navy);word-break:keep-all}
+  .kq-rom{margin-top:10px;font-size:16px;color:var(--muted);font-style:italic}
+  .kq-hint{margin-top:18px;font-size:12px;color:#a0a7b6;letter-spacing:1px;text-transform:uppercase}
+  .kq-en{font-family:'Playfair Display',serif;font-size:clamp(24px,5.5vw,34px);font-weight:700;line-height:1.25;color:var(--cream)}
+  .kq-ko-small{margin-top:12px;font-family:var(--ko);font-size:18px;color:var(--gold)}
+  .kq-note{margin-top:12px;font-size:14px;color:#c9d0de;max-width:520px}
+
+  /* Nav + answer */
+  .kq-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .kq-navbtn{background:var(--card);border:1.5px solid var(--navy);color:var(--navy);border-radius:10px;padding:10px 16px;font-weight:600;font-size:14px}
+  .kq-navbtn:hover{background:var(--navy);color:var(--cream)}
+  .kq-navbtn:disabled{opacity:.35;pointer-events:none}
+  .kq-count{font-weight:600;color:var(--muted);font-size:14px}
+  .kq-answer{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .kq-again,.kq-got{border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;transition:transform .1s,filter .15s}
+  .kq-again{background:var(--card);color:var(--red);border:2px solid var(--red)}
+  .kq-got{background:var(--green);color:#fff;border:2px solid var(--green)}
+  .kq-again:hover,.kq-got:hover{filter:brightness(1.05);transform:translateY(-1px)}
+  .kq-again:disabled,.kq-got:disabled{opacity:.35;pointer-events:none}
+  .kq-key{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle;background:rgba(0,0,0,.08)}
+  .kq-got .kq-key{background:rgba(255,255,255,.22)}
+  .kq-shortcuts{margin-top:18px;text-align:center;font-size:12px;color:var(--muted)}
+  .kq-shortcuts kbd{font-family:inherit;background:var(--card);border:1px solid #d9d2c2;border-bottom-width:2px;border-radius:4px;padding:1px 6px;font-size:11px;color:var(--navy)}
+
+  /* Modal */
+  .kq-modal{position:fixed;inset:0;background:rgba(27,42,74,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .kq-modal.open{display:flex}
+  .kq-dialog{background:var(--cream);border-radius:18px;max-width:420px;width:100%;padding:30px 24px;text-align:center;border-top:6px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.3);animation:pop .3s ease}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  .kq-star{font-size:44px;color:var(--gold);line-height:1}
+  .kq-dialog h2{font-size:28px;margin-top:6px}
+  .kq-dialog p{color:var(--muted);margin:6px 0 18px}
+  .kq-res{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+  .kq-res div{background:var(--card);border-radius:10px;padding:10px 4px}
+  .kq-res b{display:block;font-family:'Playfair Display',serif;font-size:24px}
+  .kq-res span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+  .kq-dialog .row{display:flex;flex-direction:column;gap:10px}
+  .kq-primary{background:var(--navy);color:var(--gold);border:0;border-radius:10px;padding:13px;font-weight:700;font-size:15px}
+  .kq-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);border-radius:10px;padding:11px;font-weight:700;font-size:15px}
+  .kq-secondary:disabled{opacity:.35;pointer-events:none}
+
+  .kq-foot{text-align:center;font-size:12px;color:var(--muted);margin-top:28px}
+  .kq-foot em{font-family:'Playfair Display',serif}
+
+  @media (max-width:480px){
+    .kq-card{height:300px}
+    .kq-navbtn{padding:9px 12px}
+    .kq-shortcuts{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){.kq-card{transition:none}}
+</style>
+</head>
+<body class="kq">
+
+<header class="kq-hero">
+  <a class="kq-back" href="../">← All Decks</a>
+  <h1><span class="flag">🇰🇷</span> Korean Quest Flashcards</h1>
+  <div class="kq-sub" id="heroSub">Phrases · 6 Weeks · Beginner</div>
+  <div class="kq-brand">30 Day Blitz Korean · Blitz Learning</div>
+</header>
+
+<main class="kq-wrap">
+  <nav class="kq-tabs" id="tabs" aria-label="Filter by week"></nav>
+  <div class="kq-weektitle" id="weekTitle"></div>
+
+  <div class="kq-tools">
+    <button class="kq-tool" id="shuffleBtn" type="button">⤨ Shuffle</button>
+    <button class="kq-tool" id="modeBtn" type="button">Study Mode: All</button>
+    <button class="kq-tool" id="resetBtn" type="button">↺ Reset</button>
+  </div>
+
+  <section class="kq-stats" aria-live="polite">
+    <div class="kq-stat"><b id="stRemain">0</b><span>Remaining</span></div>
+    <div class="kq-stat known"><b id="stKnown">0</b><span>Known</span></div>
+    <div class="kq-stat review"><b id="stReview">0</b><span>Review</span></div>
+  </section>
+
+  <section class="kq-progress">
+    <div class="kq-progress-top">
+      <span><strong id="pgMast">0</strong> of <span id="pgTotal">0</span> mastered · <span id="pgSeen">0</span> reviewed</span>
+      <span id="pgPct">0%</span>
+    </div>
+    <div class="kq-bar" role="progressbar" aria-label="Cards mastered" aria-valuemin="0" aria-valuemax="100" id="bar">
+      <div class="seen" id="barSeen"></div>
+      <div class="mast" id="barMast"></div>
+    </div>
+    <div class="kq-overall" id="overall"></div>
+  </section>
+
+  <div class="kq-scene">
+    <div class="kq-card" id="card" role="button" tabindex="0" aria-label="Flashcard. Press Enter to flip.">
+      <div class="kq-face kq-front">
+        <span class="kq-meta" id="metaF">Day 1 · W1</span>
+        <span class="kq-status" id="statusF" hidden></span>
+        <div class="kq-lang">KOREAN</div>
+        <div class="kq-ko" id="ko">—</div>
+        <div class="kq-rom" id="rom"></div>
+        <div class="kq-hint">tap to reveal</div>
+      </div>
+      <div class="kq-face kq-back-face">
+        <span class="kq-meta" id="metaB">Day 1 · W1</span>
+        <div class="kq-lang">ENGLISH</div>
+        <div class="kq-en" id="en">—</div>
+        <div class="kq-ko-small" id="koSmall"></div>
+        <div class="kq-note" id="note"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kq-nav">
+    <button class="kq-navbtn" id="prevBtn" type="button">← Prev</button>
+    <span class="kq-count" id="count">1 / 1</span>
+    <button class="kq-navbtn" id="nextBtn" type="button">Next →</button>
+  </div>
+
+  <div class="kq-answer">
+    <button class="kq-again" id="againBtn" type="button">↩ Again <span class="kq-key">2</span></button>
+    <button class="kq-got" id="gotBtn" type="button">✓ Got it <span class="kq-key">1</span></button>
+  </div>
+
+  <div class="kq-shortcuts">
+    <kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>Enter</kbd> flip · <kbd>1</kbd> Got it · <kbd>2</kbd> Again
+  </div>
+
+  <p class="kq-foot">Every phrase comes from <em>30 Day Blitz Korean for Beginners</em>. Polite form unless marked casual or formal.</p>
+</main>
+
+<div class="kq-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="doneTitle">
+  <div class="kq-dialog">
+    <div class="kq-star">★</div>
+    <h2 id="doneTitle">Deck Complete!</h2>
+    <p id="doneText">You've reviewed all the cards in this set.</p>
+    <div class="kq-res">
+      <div><b id="rKnown" style="color:var(--green)">0</b><span>Known</span></div>
+      <div><b id="rReview" style="color:var(--red)">0</b><span>For Review</span></div>
+      <div><b id="rPct">0%</b><span>Mastered</span></div>
+    </div>
+    <div class="row">
+      <button class="kq-primary" id="studyAgainBtn" type="button">Study Again</button>
+      <button class="kq-secondary" id="missedBtn" type="button">Review Missed Only</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var WEEKS = {
+    1:"Week 1 · The Gate of Hangul (Explorer Spark)",
+    2:"Week 2 · The Seoul Subway Sprint (Travel Trailblazer)",
+    3:"Week 3 · The Drama District (K-Culture Aficionado)",
+    4:"Week 4 · The Social Square (Conversation Star)",
+    5:"Week 5 · The Resilience Range (Problem-Solver Pro)",
+    6:"Week 6 · The Quest Summit (Quest Master)"
+  };
+
+  // [week, day, korean, romanization, english, note]
+  var RAW = [
+    // ── WEEK 1 ──
+    [1,1,"안녕하세요","an-nyeong-ha-se-yo","Hello","Polite. The safest, most universal greeting."],
+    [1,1,"감사합니다","gam-sa-ham-ni-da","Thank you","Formal polite. Works in every situation."],
+    [1,1,"실례합니다","sil-lye-ham-ni-da","Excuse me / Pardon me","Formal. Passing through a crowd or getting attention."],
+    [1,1,"처음 뵙겠습니다","cheo-eum boep-get-seum-ni-da","Nice to meet you","Very polite. First introductions."],
+    [1,2,"주세요","ju-se-yo","Please give me","[Noun] + 주세요 orders anything."],
+    [1,2,"부탁합니다","bu-tak-ham-ni-da","Please / I ask a favor","More formal than 주세요."],
+    [1,2,"고맙습니다","go-map-seum-ni-da","Thank you","A softer alternative to 감사합니다. Both are safe."],
+    [1,2,"괜찮아요","gwaen-cha-na-yo","It's okay / No problem / I'm fine","Polite and versatile."],
+    [1,2,"물 주세요","mul ju-se-yo","Water, please",""],
+    [1,2,"커피 주세요","keo-pi ju-se-yo","Coffee, please",""],
+    [1,2,"김밥 주세요","gim-bap ju-se-yo","Kimbap, please",""],
+    [1,2,"여기 있습니다","yeo-gi it-seum-ni-da","Here you go","Formal. What staff say when handing something over."],
+    [1,2,"라면","ra-myeon","Ramen",""],
+    [1,2,"가게","ga-ge","Store",""],
+    [1,3,"하나","ha-na","One (1)","Native Korean number."],
+    [1,3,"둘","dul","Two (2)","Native Korean number."],
+    [1,3,"셋","set","Three (3)","Native Korean number."],
+    [1,3,"넷","net","Four (4)","Native Korean number."],
+    [1,3,"다섯","da-seot","Five (5)","Native Korean number."],
+    [1,3,"하나 주세요","ha-na ju-se-yo","One, please",""],
+    [1,3,"두 개 주세요","du gae ju-se-yo","Two (items), please","개 is the counter for things."],
+    [1,3,"세 명이에요","se myeong-i-e-yo","We are three people","Useful when entering a restaurant."],
+    [1,3,"사랑","sa-rang","Love",""],
+    [1,3,"밥","bap","Rice / meal",""],
+    [1,4,"얼마예요?","eol-ma-ye-yo?","How much is it?","Your go-to price question."],
+    [1,4,"이거 주세요","i-geo ju-se-yo","This, please","Point + phrase = done."],
+    [1,4,"네","ne","Yes",""],
+    [1,4,"아니요","a-ni-yo","No","Polite."],
+    [1,4,"천 원이에요","cheon won-i-e-yo","It's 1,000 won",""],
+    [1,4,"차","cha","Tea / car","Meaning comes from context."],
+    [1,4,"치킨","chi-kin","Chicken (fried)",""],
+    [1,5,"말","mal","Word / speech / horse","Batchim ㄹ ending."],
+    [1,5,"눈","nun","Eye / snow","Batchim ㄴ ending."],
+    [1,5,"안녕하세요, 이거 주세요","an-nyeong-ha-se-yo, i-geo ju-se-yo","Hello. This, please.","Week 1 in one sentence."],
+
+    // ── WEEK 2 ──
+    [2,6,"어디예요?","eo-di-ye-yo?","Where is it?","[Noun] + 어디예요? = Where is [noun]?"],
+    [2,6,"화장실 어디예요?","hwa-jang-sil eo-di-ye-yo?","Where is the restroom?",""],
+    [2,6,"역은 어디예요?","yeo-geun eo-di-ye-yo?","Where is the station?",""],
+    [2,6,"역","yeok","Station","Every subway stop name ends in 역."],
+    [2,6,"오른쪽","o-reun-jjok","Right (direction)",""],
+    [2,6,"왼쪽","oen-jjok","Left (direction)",""],
+    [2,6,"오른쪽이에요","o-reun-jjok-i-e-yo","It's to the right",""],
+    [2,6,"버스정류장","beo-seu-jeong-ryu-jang","Bus stop",""],
+    [2,6,"카페 어디예요?","ka-pe eo-di-ye-yo?","Where is the café?",""],
+    [2,7,"표","pyo","Ticket",""],
+    [2,7,"표 두 장 주세요","pyo du jang ju-se-yo","Two tickets, please","장 is the counter for flat things like tickets."],
+    [2,7,"몇 시예요?","myeot si-ye-yo?","What time is it?",""],
+    [2,7,"지하철","ji-ha-cheol","Subway","Literally \"underground rail.\""],
+    [2,7,"버스","beo-seu","Bus",""],
+    [2,7,"택시","taek-si","Taxi",""],
+    [2,7,"삼천 원이에요","sam-cheon won-i-e-yo","It's 3,000 won","Money uses Sino-Korean numbers."],
+    [2,8,"메뉴 주세요","me-nyu ju-se-yo","Menu, please",""],
+    [2,8,"차가운 물 주세요","cha-ga-un mul ju-se-yo","Cold water, please","Water is usually room temperature."],
+    [2,8,"맛있어요","ma-si-sseo-yo","It's delicious",""],
+    [2,8,"잘 먹겠습니다","jal meok-get-seum-ni-da","I'll eat well","Said before a meal, thanking whoever made or paid for it."],
+    [2,8,"잘 먹었습니다","jal meo-geot-seum-ni-da","I ate well / Thank you for the meal","Said after a meal."],
+    [2,8,"여기요","yeo-gi-yo","Excuse me! (to a server) / Here you go","Calls staff over politely."],
+    [2,8,"김치찌개 주세요","gim-chi-jji-gae ju-se-yo","Kimchi stew, please",""],
+    [2,8,"비빔밥 주세요","bi-bim-bap ju-se-yo","Bibimbap, please",""],
+    [2,9,"도와주세요","do-wa-ju-se-yo","Please help","Say it calmly and clearly."],
+    [2,9,"이해 못했어요","i-hae mot-hae-sseo-yo","I didn't understand",""],
+    [2,9,"천천히 말해 주세요","cheon-cheon-hi mal-hae ju-se-yo","Please speak slowly",""],
+    [2,9,"왜요?","wae-yo?","Why?","Polite. Keep the tone soft."],
+    [2,9,"왼쪽이에요","oen-jjok-i-e-yo","It's to the left",""],
+    [2,9,"외국인","oe-guk-in","Foreigner",""],
+    [2,10,"물 주세요, 얼마예요?","mul ju-se-yo, eol-ma-ye-yo?","Water, please. How much is it?",""],
+    [2,10,"오백 원이에요","o-baek won-i-e-yo","It's 500 won",""],
+    [2,10,"만 원이에요","man won-i-e-yo","It's 10,000 won","만 = 10,000. Often a meal or ticket price."],
+    [2,10,"원","won","Won (Korean currency)",""],
+    [2,10,"뭐","mwo","What?",""],
+    [2,10,"위치","wi-chi","Location",""],
+
+    // ── WEEK 3 ──
+    [3,11,"안녕!","an-nyeong!","Hi! / Bye!","Casual. Friends and same-age peers only."],
+    [3,11,"잘 지내?","jal ji-nae?","How are you? / Doing well?","Casual."],
+    [3,11,"대박!","dae-bak!","Amazing! / No way!","Shock, excitement or hype."],
+    [3,11,"괜찮아?","gwaen-cha-na?","You okay?","Casual. Polite: 괜찮아요?"],
+    [3,11,"반말해도 돼요?","ban-mal-hae-do dwae-yo?","Can we speak casually?","Asking permission to switch to casual speech."],
+    [3,11,"어, 그래!","eo, geu-rae!","Yeah, sure!","Casual."],
+    [3,11,"꿈","kkum","Dream","Tense ㄲ."],
+    [3,11,"꼭","kkok","Definitely / for sure",""],
+    [3,12,"행복해","haeng-bok-hae","I'm happy","Casual. Polite: 행복해요."],
+    [3,12,"슬퍼","seul-peo","I'm sad","Casual. Polite: 슬퍼요."],
+    [3,12,"화나","hwa-na","I'm angry","Casual. Polite: 화나요."],
+    [3,12,"신나!","sin-na!","I'm excited! / I'm pumped!","Casual."],
+    [3,12,"행복해요","haeng-bok-hae-yo","I'm happy","Polite."],
+    [3,12,"또","tto","Again","Tense ㄸ."],
+    [3,12,"떡","tteok","Rice cake",""],
+    [3,12,"똑같아","ttok-ga-ta","Same / identical","Casual."],
+    [3,13,"안 돼!","an dwae!","No way! / Don't!","Classic drama exclamation."],
+    [3,13,"맞아!","ma-ja!","Right! / Exactly!","Casual."],
+    [3,13,"맞아요","ma-ja-yo","That's right","Polite."],
+    [3,13,"화이팅!","hwa-i-ting!","You can do it! / Let's go!","Also 파이팅! (pa-i-ting)."],
+    [3,13,"진짜야","jin-jja-ya","It's true / Seriously","Casual. Polite: 진짜예요."],
+    [3,13,"빨리","ppal-li","Quickly / hurry","Tense ㅃ."],
+    [3,13,"빵","ppang","Bread",""],
+    [3,14,"귀여워!","gwi-yeo-wo!","Cute!","Casual."],
+    [3,14,"멋있어!","meo-si-sseo!","Cool! / Handsome! / Stylish!","Casual."],
+    [3,14,"좋아해","jo-a-hae","I like you / I like it","Casual. Can sound romantic."],
+    [3,14,"덕후","deok-hu","Hardcore fan / geek","Can be affectionate or teasing."],
+    [3,14,"아싸!","a-ssa!","Woohoo! / Yes!","Tense ㅆ."],
+    [3,14,"쌀","ssal","Rice (uncooked)",""],
+    [3,15,"진짜?","jin-jja?","Really?",""],
+    [3,15,"진짜 귀여워!","jin-jja gwi-yeo-wo!","Really cute!","Casual."],
+    [3,15,"짜다","jja-da","To be salty","Tense ㅉ."],
+
+    // ── WEEK 4 ──
+    [4,16,"이름이 뭐예요?","i-reum-i mwo-ye-yo?","What's your name?","Polite."],
+    [4,16,"저는 민지예요","jeo-neun min-ji-ye-yo","I'm Minji","Name ends in a vowel → 예요."],
+    [4,16,"저는 수진이에요","jeo-neun su-jin-i-e-yo","I'm Sujin","Name ends in a consonant → 이에요."],
+    [4,16,"친구","chin-gu","Friend",""],
+    [4,16,"반가워요","ban-ga-wo-yo","Nice to meet you","Polite and warm."],
+    [4,16,"어디에서 오셨어요?","eo-di-e-seo o-syeo-sseo-yo?","Where are you from?","Polite and respectful."],
+    [4,16,"방","bang","Room","Batchim ㅇ ending."],
+    [4,17,"예뻐요","ye-ppeo-yo","You're pretty / It's pretty","Use carefully with strangers."],
+    [4,17,"잘생겼어요","jal-saeng-gyeo-sseo-yo","You're handsome",""],
+    [4,17,"멋져요","meot-jyeo-yo","You're cool / stylish","The safest all-round compliment."],
+    [4,17,"아름다워요","a-reum-da-wo-yo","It's beautiful","Nature, art, performances."],
+    [4,17,"잘했어요!","jal-hae-sseo-yo!","Good job!",""],
+    [4,17,"센스 있어요","sen-seu i-sseo-yo","You have good taste / sense",""],
+    [4,17,"아니에요","a-ni-e-yo","Oh, not at all","Modest reply to a compliment."],
+    [4,17,"한국어 잘해요!","han-gu-geo jal-hae-yo!","Your Korean is good!",""],
+    [4,17,"밤","bam","Night / chestnut",""],
+    [4,18,"잘 지냈어요?","jal ji-nae-sseo-yo?","Have you been well?",""],
+    [4,18,"취미가 뭐예요?","chwi-mi-ga mwo-ye-yo?","What's your hobby?",""],
+    [4,18,"한국 좋아해요?","han-guk jo-a-hae-yo?","Do you like Korea?",""],
+    [4,18,"날씨 좋네요","nal-ssi jon-ne-yo","The weather is nice",""],
+    [4,18,"저는 음악 좋아해요","jeo-neun eu-mak jo-a-hae-yo","I like music",""],
+    [4,18,"밥 먹었어요?","bap meo-geo-sseo-yo?","Did you eat?","A warm, caring check-in."],
+    [4,18,"요즘 어때요?","yo-jeum eo-ttae-yo?","How's life these days?",""],
+    [4,18,"싫어","si-reo","I don't like it","Casual."],
+    [4,19,"같이 가요","ga-chi ga-yo","Let's go together",""],
+    [4,19,"놀러 와요","nol-leo wa-yo","Come hang out",""],
+    [4,19,"언제?","eon-je?","When?","Casual. Polite: 언제요?"],
+    [4,19,"좋아요!","jo-a-yo!","Sounds good! / I like it","Polite, warm and non-romantic."],
+    [4,19,"같이 갈래요?","ga-chi gal-lae-yo?","Shall we go together?","Friendly offer."],
+    [4,19,"커피 마실래요?","keo-pi ma-sil-lae-yo?","Want to get coffee?",""],
+    [4,19,"영화 볼래요?","yeong-hwa bol-lae-yo?","Want to watch a movie?",""],
+    [4,19,"의사","ui-sa","Doctor",""],
+    [4,20,"저는 학생이에요","jeo-neun hak-saeng-i-e-yo","I'm a student",""],
+    [4,20,"저는 미국 사람이에요","jeo-neun mi-guk sa-ram-i-e-yo","I'm American",""],
+
+    // ── WEEK 5 ──
+    [5,21,"정말요?","jeong-mal-lyo?","Really?","Polite."],
+    [5,21,"병원 어디예요?","byeong-won eo-di-ye-yo?","Where is the hospital?",""],
+    [5,21,"경찰","gyeong-chal","Police","Dial 112 for police in Korea."],
+    [5,21,"경찰 불러 주세요","gyeong-chal bul-leo ju-se-yo","Please call the police",""],
+    [5,21,"괜찮아요?","gwaen-cha-na-yo?","Are you okay?","Rising tone = question."],
+    [5,21,"진정하세요","jin-jeong-ha-se-yo","Please calm down",""],
+    [5,21,"여기서 가까워요","yeo-gi-seo ga-kka-wo-yo","It's close from here",""],
+    [5,21,"약국","yak-guk","Pharmacy",""],
+    [5,22,"죄송합니다","joe-song-ham-ni-da","I'm very sorry","Formal. Always safe."],
+    [5,22,"미안해요","mi-an-hae-yo","I'm sorry","Polite. Small mistakes."],
+    [5,22,"괜찮습니다","gwaen-chan-seum-ni-da","It's okay","Formal."],
+    [5,22,"늦어서 죄송합니다","neu-jeo-seo joe-song-ham-ni-da","Sorry I'm late",""],
+    [5,22,"죄송합니다, 도와주셔서 감사합니다","joe-song-ham-ni-da, do-wa-ju-syeo-seo gam-sa-ham-ni-da","I'm sorry, and thank you for helping me","Apology + gratitude."],
+    [5,22,"닭","dak","Chicken","ㄺ is pronounced ㄱ."],
+    [5,22,"삶","sam","Life","ㄻ is pronounced ㅁ."],
+    [5,23,"뭐라고요?","mwo-ra-go-yo?","What did you say?","Soft rising tone."],
+    [5,23,"이해했어요","i-hae-hae-sseo-yo","I understood",""],
+    [5,23,"영어로요?","yeong-eo-ro-yo?","In English?",""],
+    [5,23,"다시 한 번요","da-si han beon-nyo","One more time, please",""],
+    [5,23,"언제요?","eon-je-yo?","When?","Polite."],
+    [5,23,"어디요?","eo-di-yo?","Where?","Polite."],
+    [5,23,"누구요?","nu-gu-yo?","Who?","Polite."],
+    [5,24,"감사해요","gam-sa-hae-yo","Thank you","Polite and warm. The balanced choice."],
+    [5,24,"도와줘서 고마워요","do-wa-jwo-seo go-ma-wo-yo","Thanks for helping me",""],
+    [5,24,"즐거웠어요","jeul-geo-wo-sseo-yo","I had fun",""],
+    [5,24,"또 봐요!","tto bwa-yo!","See you again!",""],
+    [5,24,"정말 고마워요","jeong-mal go-ma-wo-yo","Thank you so much",""],
+    [5,24,"신경 써줘서 고마워요","sin-gyeong sseo-jwo-seo go-ma-wo-yo","Thanks for being thoughtful",""],
+    [5,24,"와주셔서 감사합니다","wa-ju-syeo-seo gam-sa-ham-ni-da","Thank you for coming","Formal. Events and meetings."],
+    [5,24,"제가 살게요!","je-ga sal-ge-yo!","I'll pay for this!",""],
+    [5,24,"조심히 들어가요","jo-sim-hi deu-reo-ga-yo","Get home safely",""],
+    [5,24,"고마워","go-ma-wo","Thanks","Casual. Close friends only."],
+    [5,25,"없어요","eop-seo-yo","There isn't any / I don't have it","Sounds like 업써요."],
+    [5,25,"앉아요","an-ja-yo","Sit down / I'm sitting","ㄵ simplifies to ㄴ."],
+    [5,25,"꽃","kkot","Flower","Before a vowel, ㅊ comes back: 꽃이 → 꼬치."],
+    [5,25,"값","gap","Price / value","ㅄ is pronounced ㅂ."],
+
+    // ── WEEK 6 ──
+    [6,26,"저기예요","jeo-gi-ye-yo","It's over there",""],
+    [6,26,"이거 얼마예요?","i-geo eol-ma-ye-yo?","How much is this?",""],
+    [6,26,"입구","ip-gu","Entrance / exit (of a station)","Stations number them: 1번 입구."],
+    [6,26,"1번 입구","il-beon ip-gu","Exit 1 / Entrance 1",""],
+    [6,26,"티켓 주세요","ti-ket ju-se-yo","Ticket, please",""],
+    [6,26,"서울역","seo-ul-yeok","Seoul Station",""],
+    [6,26,"명동역","myeong-dong-yeok","Myeongdong Station",""],
+    [6,27,"진짜 대박!","jin-jja dae-bak!","Seriously amazing!","Casual."],
+    [6,27,"완전 귀여워!","wan-jeon gwi-yeo-wo!","Absolutely adorable!","Casual."],
+    [6,27,"헐!","heol!","Whoa! / OMG!","Casual reaction sound."],
+    [6,27,"진짜 잘해요!","jin-jja jal-hae-yo!","They're really good!",""],
+    [6,27,"좋아해요","jo-a-hae-yo","I like it / I like them","Polite and safe. Not romantic."],
+    [6,27,"와, 진짜 멋있어!","wa, jin-jja meo-si-sseo!","Wow, that's so cool!","Casual."],
+    [6,28,"이거 정말 멋져요!","i-geo jeong-mal meot-jyeo-yo!","This is really cool!",""],
+    [6,28,"한국 좋아해요","han-guk jo-a-hae-yo","I like Korea",""],
+    [6,28,"아니에요, 아직 멀었어요","a-ni-e-yo, a-jik meo-reo-sseo-yo","Oh no, I still have a long way to go","Modest reply when your Korean is praised."],
+    [6,28,"어디에서 왔어요?","eo-di-e-seo wa-sseo-yo?","Where are you from?",""],
+    [6,28,"한국 어때요?","han-guk eo-ttae-yo?","How do you like Korea?",""],
+    [6,28,"사진 찍어 드릴까요?","sa-jin jji-geo deu-ril-kka-yo?","Shall I take a photo for you?",""],
+    [6,28,"날씨 좋죠?","nal-ssi jo-chyo?","The weather is nice, right?",""],
+    [6,28,"반가웠어요!","ban-ga-wo-sseo-yo!","It was nice to meet you!",""],
+    [6,29,"꽃이 예뻐요","kko-chi ye-ppeo-yo","The flower is pretty",""],
+    [6,29,"밥 있어요?","ba-bi-sseo-yo?","Do you have rice / food?","Linking: 밥 있어요 → 바비써요."],
+    [6,29,"진짜 맛있어요!","jin-jja ma-si-sseo-yo!","It's really delicious!",""],
+    [6,29,"또 만나요","tto man-na-yo","See you again!","Warmer and more personal than 또 봐요."],
+    [6,30,"행복하세요!","haeng-bok-ha-se-yo!","I wish you happiness!",""],
+    [6,30,"수고했어요","su-go-hae-sseo-yo","You worked hard / Good work",""],
+    [6,30,"고마워요","go-ma-wo-yo","Thank you","Polite."],
+    [6,30,"한국","han-guk","Korea",""],
+    [6,30,"사랑해","sa-rang-hae","I love you","Casual."],
+    [6,30,"한국 너무 좋아요!","han-guk neo-mu jo-a-yo!","I love Korea so much!",""]
+  ];
+
+  var CARDS = RAW.map(function(r){
+    return {id:r[1]+"|"+r[2], week:r[0], day:r[1], ko:r[2], rom:r[3], en:r[4], note:r[5]||""};
+  });
+  var BY_ID = {}; CARDS.forEach(function(c){ BY_ID[c.id]=c; });
+
+  // ---- persistence (per-viewer, optional) ----
+  var KEY = "kq-korean-progress-v1";
+  var status = {};
+  try { status = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ status = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(status)); } catch(e){} }
+
+  // ---- state ----
+  var week = "all", mode = "all", shuffled = false, deck = [], idx = 0, flipped = false;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var el = {
+    tabs:$("tabs"), weekTitle:$("weekTitle"), card:$("card"),
+    ko:$("ko"), rom:$("rom"), en:$("en"), koSmall:$("koSmall"), note:$("note"),
+    metaF:$("metaF"), metaB:$("metaB"), statusF:$("statusF"),
+    count:$("count"), prev:$("prevBtn"), next:$("nextBtn"),
+    got:$("gotBtn"), again:$("againBtn"), modeBtn:$("modeBtn"), shuffleBtn:$("shuffleBtn"),
+    modal:$("modal")
+  };
+
+  $("heroSub").textContent = CARDS.length + " Phrases · 6 Weeks · Beginner";
+
+  function inWeek(c){ return week === "all" || c.week === week; }
+  function shuffle(a){ for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+  function buildDeck(){
+    var base = CARDS.filter(inWeek);
+    if (mode === "missed") {
+      base = base.filter(function(c){ return status[c.id] === "a"; });
+      base.forEach(function(c){ delete status[c.id]; });
+      save();
+    }
+    deck = base.map(function(c){ return c.id; });
+    if (shuffled) shuffle(deck);
+    idx = firstUnseen(0);
+    if (idx < 0) idx = 0;
+    flipped = false;
+  }
+
+  function firstUnseen(from){
+    for (var n=0;n<deck.length;n++){
+      var i = (from + n) % deck.length;
+      if (!status[deck[i]]) return i;
+    }
+    return -1;
+  }
+
+  function renderTabs(){
+    var html = '<button class="kq-tab'+(week==="all"?" active":"")+'" data-w="all" type="button">All<span class="n">'+CARDS.length+'</span></button>';
+    for (var w=1; w<=6; w++){
+      var n = CARDS.filter(function(c){ return c.week===w; }).length;
+      html += '<button class="kq-tab'+(week===w?" active":"")+'" data-w="'+w+'" type="button" title="'+WEEKS[w]+'">Week '+w+'<span class="n">'+n+'</span></button>';
+    }
+    el.tabs.innerHTML = html;
+    el.weekTitle.textContent = week === "all" ? "All six weeks · Days 1–30" : WEEKS[week];
+  }
+
+  function setText(node, t){ node.textContent = t; }
+
+  function render(){
+    var c = BY_ID[deck[idx]];
+    el.card.classList.toggle("flipped", flipped);
+    if (!c){
+      setText(el.ko, mode==="missed" ? "Nothing to review" : "No cards");
+      setText(el.rom, mode==="missed" ? "No missed cards here. Switch Study Mode back to All." : "");
+      setText(el.en, "—"); setText(el.koSmall,""); setText(el.note,"");
+      setText(el.metaF,""); setText(el.metaB,""); el.statusF.hidden = true;
+      setText(el.count, "0 / 0");
+    } else {
+      var meta = "Day " + c.day + " · W" + c.week;
+      setText(el.metaF, meta); setText(el.metaB, meta);
+      setText(el.ko, c.ko); setText(el.rom, c.rom);
+      setText(el.en, c.en); setText(el.koSmall, c.ko); setText(el.note, c.note);
+      var s = status[c.id];
+      el.statusF.hidden = !s;
+      el.statusF.className = "kq-status " + (s||"");
+      el.statusF.textContent = s==="k" ? "Known" : s==="a" ? "Review" : "";
+      setText(el.count, (idx+1) + " / " + deck.length);
+    }
+    var empty = !deck.length;
+    el.prev.disabled = empty || deck.length < 2;
+    el.next.disabled = empty || deck.length < 2;
+    el.got.disabled = empty; el.again.disabled = empty;
+    el.modeBtn.textContent = "Study Mode: " + (mode==="all" ? "All" : "Missed");
+    el.modeBtn.classList.toggle("on", mode==="missed");
+    el.shuffleBtn.classList.toggle("on", shuffled);
+    renderStats();
+  }
+
+  function renderStats(){
+    var known=0, review=0;
+    deck.forEach(function(id){ if (status[id]==="k") known++; else if (status[id]==="a") review++; });
+    var total = deck.length, seen = known + review;
+    setText($("stRemain"), total - seen);
+    setText($("stKnown"), known);
+    setText($("stReview"), review);
+    setText($("pgMast"), known);
+    setText($("pgTotal"), total);
+    setText($("pgSeen"), seen);
+    var pct = total ? Math.round(known/total*100) : 0;
+    setText($("pgPct"), pct + "% mastered");
+    $("barMast").style.width = (total ? known/total*100 : 0) + "%";
+    $("barSeen").style.width = (total ? seen/total*100 : 0) + "%";
+    $("bar").setAttribute("aria-valuenow", pct);
+    var all = CARDS.filter(function(c){ return status[c.id]==="k"; }).length;
+    setText($("overall"), "Whole book: " + all + " / " + CARDS.length + " mastered");
+  }
+
+  function flip(){ if (!deck.length) return; flipped = !flipped; el.card.classList.toggle("flipped", flipped); }
+
+  function go(step){
+    if (deck.length < 2) return;
+    idx = (idx + step + deck.length) % deck.length;
+    flipped = false; render();
+  }
+
+  function mark(s){
+    if (!deck.length) return;
+    status[deck[idx]] = s; save();
+    var nxt = firstUnseen((idx+1) % deck.length);
+    if (nxt < 0){ flipped = false; render(); showDone(); return; }
+    idx = nxt; flipped = false;
+    // let the card turn back before swapping content
+    el.card.classList.remove("flipped");
+    setTimeout(render, 160);
+    renderStats();
+  }
+
+  function showDone(){
+    var known=0, review=0;
+    deck.forEach(function(id){ if (status[id]==="k") known++; else if (status[id]==="a") review++; });
+    setText($("rKnown"), known); setText($("rReview"), review);
+    setText($("rPct"), (deck.length ? Math.round(known/deck.length*100) : 0) + "%");
+    setText($("doneText"), (week==="all" ? "You've reviewed every card in the book." : "You've reviewed every card in Week " + week + ".") );
+    $("missedBtn").disabled = review === 0;
+    el.modal.classList.add("open");
+    $("studyAgainBtn").focus();
+  }
+  function closeDone(){ el.modal.classList.remove("open"); el.card.focus(); }
+
+  // ---- events ----
+  el.tabs.addEventListener("click", function(e){
+    var b = e.target.closest(".kq-tab"); if (!b) return;
+    var w = b.getAttribute("data-w");
+    week = w === "all" ? "all" : parseInt(w,10);
+    mode = "all";
+    renderTabs(); buildDeck(); render();
+  });
+  el.card.addEventListener("click", flip);
+  el.prev.addEventListener("click", function(){ go(-1); });
+  el.next.addEventListener("click", function(){ go(1); });
+  el.got.addEventListener("click", function(){ mark("k"); });
+  el.again.addEventListener("click", function(){ mark("a"); });
+  el.shuffleBtn.addEventListener("click", function(){
+    shuffled = !shuffled;
+    var cur = deck[idx];
+    if (shuffled) shuffle(deck);
+    else { var order = CARDS.map(function(c){return c.id;}); deck.sort(function(a,b){ return order.indexOf(a)-order.indexOf(b); }); }
+    idx = Math.max(0, deck.indexOf(cur)); flipped = false; render();
+  });
+  el.modeBtn.addEventListener("click", function(){
+    mode = mode === "all" ? "missed" : "all";
+    buildDeck(); render();
+  });
+  $("resetBtn").addEventListener("click", function(){
+    var label = week==="all" ? "all weeks" : "Week " + week;
+    if (!window.confirm("Reset progress for " + label + "?")) return;
+    CARDS.filter(inWeek).forEach(function(c){ delete status[c.id]; });
+    save(); mode = "all"; buildDeck(); render();
+  });
+  $("studyAgainBtn").addEventListener("click", function(){
+    deck.forEach(function(id){ delete status[id]; });
+    save(); mode = "all"; closeDone(); buildDeck(); render();
+  });
+  $("missedBtn").addEventListener("click", function(){
+    mode = "missed"; closeDone(); buildDeck(); render();
+  });
+  el.modal.addEventListener("click", function(e){ if (e.target === el.modal) closeDone(); });
+
+  document.addEventListener("keydown", function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (el.modal.classList.contains("open")){
+      if (e.key === "Escape") closeDone();
+      return;
+    }
+    var t = e.target;
+    var onCard = t === el.card;
+    var onButton = t && t.tagName === "BUTTON" && !onCard;
+    switch (e.key){
+      case "ArrowRight": e.preventDefault(); go(1); break;
+      case "ArrowLeft": e.preventDefault(); go(-1); break;
+      case "Enter":
+        if (onButton) return; // let focused buttons activate normally
+        e.preventDefault(); flip(); break;
+      case " ":
+        if (onButton) return;
+        e.preventDefault(); flip(); break;
+      case "1": e.preventDefault(); mark("k"); break;
+      case "2": e.preventDefault(); mark("a"); break;
+    }
+  });
+
+  renderTabs(); buildDeck(); render();
+})();
+</script>
+</body>
+</html>
