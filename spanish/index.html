@@ -8,30 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
-.coming-soon-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  text-align: center;
-  gap: 16px;
-  padding: 40px 24px;
-}
-.cs-flag { font-size: 4rem; }
-.cs-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--fg); }
-.cs-sub   { font-size: .95rem; color: var(--muted); max-width: 380px; line-height: 1.6; }
-.cs-badge {
-  background: var(--lgold);
-  color: var(--navy);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  padding: 6px 16px;
-  border-radius: 20px;
-  border: 1.5px solid var(--gold);
-}
+  .kbd-hint { font-size:.68rem; color:var(--muted); text-align:center; margin-top:14px; line-height:1.7; }
+  .kbd-hint kbd { font-family:inherit; font-size:.64rem; font-weight:600; padding:1px 6px; border:1px solid var(--border); border-bottom-width:2px; border-radius:4px; background:var(--card-bg); color:var(--fg); }
+  .card-day-title { font-size:.68rem; color:rgba(255,255,255,.45); margin-top:6px; letter-spacing:.04em; text-align:center; }
+  @media (hover:none) { .kbd-hint { display:none; } }
 </style>
 </head>
 <body>
@@ -39,18 +19,403 @@
 <header class="site-header">
   <div>
     <div class="header-brand">🇪🇸 Spanish Quest Flashcards</div>
-    <div class="header-sub">30-Day Blitz Series</div>
+    <div class="header-sub" id="headerSub">Phrases · 6 Weeks · Beginner</div>
   </div>
   <a href="../" class="header-back">← All Decks</a>
 </header>
 
-<div class="coming-soon-wrap">
-  <div class="cs-flag">🇪🇸</div>
-  <div class="cs-badge">Coming Soon</div>
-  <div class="cs-title">30-Day Spanish Quest</div>
-  <div class="cs-sub">The Spanish flashcard deck is on its way. Check back once the book launches — 180 phrases, 6 weeks, same great format.</div>
-  <a href="../" class="btn primary" style="margin-top:8px;">← Back to All Decks</a>
-</div>
+<div class="page-inner">
 
+  <!-- Week filter -->
+  <div class="week-tabs" id="weekTabs">
+    <button class="week-tab active" data-week="0" id="allTab">All</button>
+    <button class="week-tab" data-week="1">Week 1</button>
+    <button class="week-tab" data-week="2">Week 2</button>
+    <button class="week-tab" data-week="3">Week 3</button>
+    <button class="week-tab" data-week="4">Week 4</button>
+    <button class="week-tab" data-week="5">Week 5</button>
+    <button class="week-tab" data-week="6">Week 6</button>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-row">
+    <button class="ctrl-btn" id="shuffleBtn">Shuffle</button>
+    <button class="ctrl-btn" id="studyModeBtn">Study Mode: All</button>
+    <button class="ctrl-btn" id="resetBtn">Reset</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stat-pill">Remaining <span id="statRemain">0</span></div>
+    <div class="stat-pill">Known <span id="statKnown">0</span></div>
+    <div class="stat-pill">Review <span id="statReview">0</span></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" style="margin-bottom:4px;">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div style="font-size:.7rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:16px;">
+    <span id="progressText">0 of 0 mastered</span>
+    <span id="progressPct">0%</span>
+  </div>
+
+  <!-- Card -->
+  <div class="card-area" id="cardArea">
+    <div class="flip-card" id="flipCard" role="button" aria-label="Flip card">
+      <div class="flip-inner">
+        <div class="card-face card-front">
+          <div class="card-badge" id="cardBadge">Day 1 · W1</div>
+          <div class="card-eyebrow">SPANISH</div>
+          <div class="card-main-text" id="cardSpanish">—</div>
+          <div class="card-day-title" id="cardDayTitle"></div>
+          <div class="card-tap-hint">tap to reveal</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-badge-back" id="cardBadgeBack">Day 1 · W1</div>
+          <div class="card-eyebrow-back">ENGLISH</div>
+          <div class="card-main-back" id="cardEnglish">—</div>
+          <div class="card-pron" id="cardPron">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="card-counter" id="cardCounter">1 / 1</span>
+      <button class="btn primary" id="nextBtn">Next →</button>
+    </div>
+
+    <div class="verdict-row" id="verdictRow" style="display:none;">
+      <button class="verdict-btn again" id="againBtn">↩ Again</button>
+      <button class="verdict-btn know"  id="knowBtn">✓ Got it</button>
+    </div>
+
+    <div class="kbd-hint">
+      <kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>Enter</kbd> flip · <kbd>1</kbd> Got it · <kbd>2</kbd> Again
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="done-screen" id="doneScreen">
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--gold);">★</div>
+    <div class="done-title">¡Felicidades!</div>
+    <div class="done-sub">You've reviewed all the cards in this set.</div>
+    <div class="done-stats">
+      <div class="done-stat"><div class="done-stat-n" id="doneKnown">0</div><div class="done-stat-label">Known</div></div>
+      <div class="done-stat"><div class="done-stat-n" id="doneReview">0</div><div class="done-stat-label">For Review</div></div>
+      <div class="done-stat"><div class="done-stat-n" id="donePct">0%</div><div class="done-stat-label">Mastered</div></div>
+    </div>
+    <button class="btn primary" id="restartBtn" style="margin-top:6px;">Study Again</button>
+    <button class="btn" id="reviewWrongBtn" style="margin-top:4px;">Review Missed Only</button>
+  </div>
+
+</div><!-- /page-inner -->
+
+<script>
+// Day titles from "30-Day Spanish Learning Quest for Beginners"
+const DAYS = {
+  1:"The Hello Hook",2:"The Polite Power-Up",3:"The Yes / No Safety Net",4:"Numbers That Matter",5:"The Weekly Loop",
+  6:"The Direction Decoder",7:"Ticket to Ride",8:"The Café Survival Kit",9:"The Reset Button",10:"The Travel Boss",
+  11:"The Reaction Toolkit",12:"The Internal Pulse",13:"The Support Signal",14:"The Opinion Pivot",15:"The Human Flow",
+  16:"The Identity Exchange",17:"The Social Pulse-Check",18:"The Sentence Glue",19:"The Power of “Why”",20:"The Bridge-Builder",
+  21:"The Wi-Fi Fix",22:"Lost and Found Logic",23:"The Preference Pivot",24:"The Warm Exit",25:"Recovery Master",
+  26:"The Movement Chain",27:"The Café Pro",28:"The Social Bridge",29:"The Calm Anchor",30:"The Signature Flow"
+};
+
+// [day, spanish, english, pronunciation]
+const RAW = [
+  // ── Week 1: The First Contact
+  [1,"Hola","Hello","OH-lah"],
+  [1,"Gracias","Thank you","GRAH-syahs"],
+  [1,"Sí","Yes","see"],
+  [1,"No","No","noh"],
+  [1,"Por favor","Please","por fah-VOR"],
+  [2,"Buenos días","Good morning","BWAY-nohs DEE-ahs"],
+  [2,"Buenas tardes","Good afternoon","BWAY-nahs TAR-des"],
+  [2,"Buenas noches","Good evening / Good night","BWAY-nahs NOH-ches"],
+  [2,"¿Cómo estás?","How are you? (casual)","KOH-moh es-TAHS"],
+  [2,"Bien","Good / Fine","byehn"],
+  [3,"Me llamo…","My name is…","meh YAH-moh"],
+  [3,"Soy de…","I'm from…","soy deh"],
+  [3,"Mucho gusto","Nice to meet you","MOO-choh GOOS-toh"],
+  [3,"¿Y tú?","And you? (casual)","ee too"],
+  [3,"Encantado / Encantada","Delighted (nice to meet you)","en-kahn-TAH-doh / en-kahn-TAH-dah"],
+  [4,"Perdón","Sorry / Excuse me","pehr-DON"],
+  [4,"Disculpa","Excuse me (to get attention)","dees-KOOL-pah"],
+  [4,"¿Cuánto cuesta?","How much does it cost?","KWAN-toh KWEHS-tah"],
+  [4,"Esto, por favor","This, please","EHS-toh por fah-VOR"],
+  [4,"uno","one","OO-noh"],
+  [4,"dos","two","dohs"],
+  [4,"tres","three","trehs"],
+  [4,"cuatro","four","KWAH-troh"],
+  [4,"cinco","five","SEEN-koh"],
+  [4,"seis","six","SAY-ees"],
+  [4,"siete","seven","SYEH-teh"],
+  [4,"ocho","eight","OH-choh"],
+  [4,"nueve","nine","NWEH-beh"],
+  [4,"diez","ten","dyehs"],
+  [5,"Hola, buenos días","Hello, good morning","OH-lah BWAY-nohs DEE-ahs"],
+  [5,"Bien, gracias","Good, thank you","byen GRAH-syahs"],
+  [5,"Perdón, ¿cuánto cuesta?","Excuse me, how much does it cost?","pehr-DON KWAN-toh KWEHS-tah"],
+  [5,"Esto, por favor. Gracias.","This, please. Thank you.","EHS-toh por fah-VOR. GRAH-syahs"],
+
+  // ── Week 2: The City Navigator
+  [6,"¿Dónde está…?","Where is…?","DON-deh ehs-TAH"],
+  [6,"aquí","here","ah-KEE"],
+  [6,"allí","there","ah-YEE"],
+  [6,"a la izquierda","to the left","ah lah ees-KYEHR-dah"],
+  [6,"a la derecha","to the right","ah lah deh-REH-chah"],
+  [6,"todo recto","straight ahead","TOH-doh REHK-toh"],
+  [6,"Perdón, ¿dónde está el baño?","Excuse me, where is the bathroom?","pehr-DON DON-deh ehs-TAH ehl BAH-nyoh"],
+  [6,"Allí, a la derecha","There, to the right","ah-YEE ah lah deh-REH-chah"],
+  [6,"entrada","entrance","ehn-TRAH-dah"],
+  [6,"salida","exit","sah-LEE-dah"],
+  [6,"abierto","open","ah-BYEHR-toh"],
+  [6,"cerrado","closed","seh-RRAH-doh"],
+  [7,"boleto / billete","ticket (Latin America / Spain)","boh-LEH-toh / bee-YEH-teh"],
+  [7,"estación","station","ehs-tah-SYON"],
+  [7,"¿A qué hora sale?","What time does it leave?","ah keh OR-ah SAH-leh"],
+  [7,"¿A qué hora llega?","What time does it arrive?","ah keh OR-ah YEH-gah"],
+  [7,"Un boleto para ____, por favor","One ticket to ____, please","oon boh-LEH-toh PAH-rah ___ por fah-VOR"],
+  [7,"¿Dónde está la estación?","Where is the station?","DON-deh ehs-TAH lah ehs-tah-SYON"],
+  [8,"Quiero…","I want…","KYEH-roh"],
+  [8,"Me gustaría…","I would like…","meh goo-stah-REE-ah"],
+  [8,"Quiero un café","I want a coffee","KYEH-roh oon kah-FEH"],
+  [8,"Agua, por favor","Water, please","AH-gwah por fah-VOR"],
+  [8,"El menú, por favor","The menu, please","ehl meh-NOO por fah-VOR"],
+  [8,"La cuenta, por favor","The bill / check, please","lah KWEHN-tah por fah-VOR"],
+  [8,"Está rico","It's tasty (right now)","ehs-TAH REE-koh"],
+  [9,"No entiendo","I don't understand","noh en-TYEN-doh"],
+  [9,"Más despacio, por favor","More slowly, please","mahs dehs-PAH-syoh por fah-VOR"],
+  [9,"¿Puede repetir?","Can you repeat?","PWEH-deh reh-peh-TEER"],
+  [9,"¿Me puede ayudar?","Can you help me?","meh PWEH-deh ah-yoo-DAR"],
+  [9,"Perdón, no entiendo","Excuse me, I don't understand","pehr-DON noh en-TYEN-doh"],
+  [9,"Sí, claro","Yes, of course","see KLAH-roh"],
+  [10,"¿A qué hora?","At what time?","ah keh OR-ah"],
+  [10,"Hola. Perdón, ¿dónde está la estación?","Hello. Excuse me, where is the station?","OH-lah. pehr-DON DON-deh ehs-TAH lah ehs-tah-SYON"],
+  [10,"¿Puede repetir, por favor?","Can you repeat, please?","PWEH-deh reh-peh-TEER por fah-VOR"],
+
+  // ── Week 3: The Local Vibe
+  [11,"¡Qué bien!","That's great!","keh BYEHN"],
+  [11,"¡Genial!","Awesome!","heh-nee-AHL"],
+  [11,"¿En serio?","Really?","en SEH-ree-oh"],
+  [11,"Claro","Of course","KLAH-roh"],
+  [11,"Vale","Okay / Got it (Spain)","VAH-leh"],
+  [11,"Voy a España","I'm going to Spain","boy ah ehs-PAH-nyah"],
+  [11,"Tengo un vuelo hoy","I have a flight today","TEN-goh oon BWEH-loh oy"],
+  [12,"Estoy cansado / cansada","I'm tired","ehs-TOY kan-SAH-doh / kan-SAH-dah"],
+  [12,"Tengo hambre","I'm hungry","TEN-goh AHM-breh"],
+  [12,"Estoy feliz","I'm happy","ehs-TOY feh-LEES"],
+  [12,"Estoy nervioso / nerviosa","I'm nervous","ehs-TOY nehr-BYOH-soh / nehr-BYOH-sah"],
+  [12,"Estoy listo / lista","I'm ready","ehs-TOY LEES-toh / LEES-tah"],
+  [12,"¿Todo bien?","Is everything okay?","TOH-doh BYEHN"],
+  [12,"¿Tienes hambre?","Are you hungry?","TYEH-nehs AHM-breh"],
+  [13,"¡Vamos!","Let's go!","VAH-mohs"],
+  [13,"No pasa nada","It's no problem / It's fine","noh PAH-sah NAH-dah"],
+  [13,"¡Ánimo!","You've got this!","AH-nee-moh"],
+  [13,"Tranquilo / Tranquila","Relax / Calm down","trahn-KEE-loh / trahn-KEE-lah"],
+  [13,"Todo bien","All good","TOH-doh BYEHN"],
+  [14,"Me gusta","I like it","meh GOOS-tah"],
+  [14,"Me encanta","I love it","meh en-KAHN-tah"],
+  [14,"No me gusta","I don't like it","noh meh GOOS-tah"],
+  [14,"Muy bueno","Very good","mooy BWEH-noh"],
+  [14,"Es rico","It is rich (general quality — not for food you're eating)","ehs REE-koh"],
+  [14,"¿Te gusta?","Do you like it?","teh GOOS-tah"],
+  [14,"Sí, me encanta. Está rico.","Yes, I love it. It tastes good.","see meh en-KAHN-tah. ehs-TAH REE-koh"],
+  [15,"Sí, me gusta mucho","Yes, I like it a lot","see meh GOOS-tah MOO-choh"],
+  [15,"¿Te gusta la ciudad?","Do you like the city?","teh GOOS-tah lah syoo-DAHD"],
+  [15,"Prueba esto","Try this","PRWEH-bah EHS-toh"],
+
+  // ── Week 4: The Social Bridge
+  [16,"¿Cómo te llamas?","What's your name? (casual)","KOH-moh teh YAH-mahs"],
+  [16,"¿Cómo se llama?","What's your name? (polite)","KOH-moh seh YAH-mah"],
+  [16,"Te presento a…","Let me introduce you to…","teh preh-SEHN-toh ah"],
+  [16,"Ah, mira","Oh, look","ah MEE-rah"],
+  [16,"Me llamo Sara. Encantada.","My name is Sara. Nice to meet you.","meh YAH-moh SAH-rah. en-kahn-TAH-dah"],
+  [17,"¿Cómo vas?","How's it going?","KOH-moh bahs"],
+  [17,"Más o menos","So-so","mahs oh MEH-nohs"],
+  [17,"Bien, gracias. ¿Y tú?","Good, thanks. And you?","byehn GRAH-syahs. ee too"],
+  [17,"Más o menos… pero todo bien","So-so… but all good","mahs oh MEH-nohs… PEH-roh TOH-doh BYEHN"],
+  [17,"Todo tranquilo","Everything's chill","TOH-doh trahn-KEE-loh"],
+  [17,"Todo claro","Everything's clear","TOH-doh KLAH-roh"],
+  [18,"y","and","ee"],
+  [18,"pero","but","PEH-roh"],
+  [18,"también","also / too","tahm-BYEHN"],
+  [18,"Yo también","Me too","yoh tahm-BYEHN"],
+  [18,"Me gusta, pero…","I like it, but…","meh GOOS-tah PEH-roh"],
+  [18,"Me gusta, pero es caro","I like it, but it's expensive","meh GOOS-tah PEH-roh ehs KAH-roh"],
+  [18,"A mí también, pero prefiero té","Me too, but I prefer tea","ah mee tahm-BYEHN PEH-roh preh-FYEH-roh teh"],
+  [19,"porque","because","POR-keh"],
+  [19,"Quiero café porque estoy cansado / cansada","I want coffee because I'm tired","KYEH-roh kah-FEH POR-keh ehs-TOY kan-SAH-doh"],
+  [19,"Me gusta aquí porque es tranquilo","I like it here because it's calm","meh GOOS-tah ah-KEE POR-keh ehs trahn-KEE-loh"],
+  [19,"Yo tampoco","Me neither","yoh tahm-POH-koh"],
+  [19,"¿Quieres café?","Do you want coffee?","KYEH-rehs kah-FEH"],
+  [20,"¿Quieres…?","Do you want…?","KYEH-rehs"],
+  [20,"Vamos a…","Let's go to…","VAH-mohs ah"],
+  [20,"Hoy","Today","oy"],
+  [20,"Mañana","Tomorrow","mah-NYAH-nah"],
+  [20,"Tal vez","Maybe","tahl behs"],
+  [20,"Sí. Vamos, porque tengo hambre.","Yes. Let's go, because I'm hungry.","see. VAH-mohs POR-keh TEN-goh AHM-breh"],
+
+  // ── Week 5: The Calm Communicator
+  [21,"No funciona","It doesn't work","noh foon-SYOH-nah"],
+  [21,"El wifi no funciona","The Wi-Fi doesn't work","ehl WEE-fee noh foon-SYOH-nah"],
+  [21,"¿Puede ayudarme?","Can you help me?","PWEH-deh ah-yoo-DAR-meh"],
+  [21,"¿Puede ayudarme, por favor?","Can you help me, please?","PWEH-deh ah-yoo-DAR-meh por fah-VOR"],
+  [21,"¿Puede esperar?","Can you wait?","PWEH-deh ehs-peh-RAR"],
+  [22,"Perdí…","I lost…","pehr-DEE"],
+  [22,"Perdí mi bolsa","I lost my bag","pehr-DEE mee BOL-sah"],
+  [22,"Perdí mi mochila","I lost my backpack","pehr-DEE mee moh-CHEE-lah"],
+  [22,"Necesito ayuda","I need help","neh-seh-SEE-toh ah-YOO-dah"],
+  [23,"ruidoso / ruidosa","noisy","rwee-DOH-soh / rwee-DOH-sah"],
+  [23,"No me gusta esta habitación porque es ruidosa","I don't like this room because it's noisy","noh meh GOOS-tah EHS-tah ah-bee-tah-SYON POR-keh ehs rwee-DOH-sah"],
+  [23,"¿Puede cambiarme?","Can you change it for me?","PWEH-deh kahm-BYAR-meh"],
+  [23,"Entiendo","I understand","en-TYEN-doh"],
+  [23,"¿Quiere otra habitación?","Do you want another room?","KYEH-reh OH-trah ah-bee-tah-SYON"],
+  [24,"Muchas gracias","Thank you very much","MOO-chahs GRAH-syahs"],
+  [24,"De nada","You're welcome","deh NAH-dah"],
+  [24,"Que tenga buen día","Have a nice day (polite)","keh TEN-gah bwehn DEE-ah"],
+  [24,"Que descanses","Rest well / Goodnight","keh dehs-KAHN-sehs"],
+  [25,"Perdón, el wifi no funciona","Excuse me, the Wi-Fi doesn't work","pehr-DON ehl WEE-fee noh foon-SYOH-nah"],
+  [25,"Claro, puedo cambiarla","Of course, I can change it","KLAH-roh PWEH-doh kahm-BYAR-lah"],
+  [25,"De nada. Que tenga buen día.","You're welcome. Have a nice day.","deh NAH-dah. keh TEN-gah bwehn DEE-ah"],
+
+  // ── Week 6: The Quest Master's Victory
+  [26,"Allí, todo recto","There, straight ahead","ah-YEE TOH-doh REHK-toh"],
+  [26,"Un boleto para Sevilla, por favor","One ticket to Seville, please","oon boh-LEH-toh PAH-rah seh-BEE-yah por fah-VOR"],
+  [26,"Perdón, ¿dónde está la estación?","Excuse me, where is the station?","pehr-DON DON-deh ehs-TAH lah ehs-tah-SYON"],
+  [27,"Me gustaría un café, por favor","I would like a coffee, please","meh goo-stah-REE-ah oon kah-FEH por fah-VOR"],
+  [27,"Está rico. Gracias.","It's tasty. Thank you.","ehs-TAH REE-koh. GRAH-syahs"],
+  [28,"Todo bien, pero estoy cansado / cansada","All good, but I'm tired","TOH-doh BYEHN PEH-roh ehs-TOY kan-SAH-doh"],
+  [28,"¿Quieres un café?","Do you want a coffee?","KYEH-rehs oon kah-FEH"],
+  [28,"Sí, claro, porque tengo hambre","Yes, of course, because I'm hungry","see KLAH-roh POR-keh TEN-goh AHM-breh"],
+  [29,"Ayuda","Help","ah-YOO-dah"],
+  [29,"Médico","Doctor","MEH-dee-koh"],
+  [29,"Policía","Police","poh-lee-SEE-ah"],
+  [29,"¿Dónde está el médico?","Where is the doctor?","DON-deh ehs-TAH ehl MEH-dee-koh"],
+  [29,"¿Dónde está la policía?","Where are the police?","DON-deh ehs-TAH lah poh-lee-SEE-ah"],
+  [29,"Perdón… necesito ayuda","Excuse me… I need help","pehr-DON neh-seh-SEE-toh ah-YOO-dah"],
+  [29,"¿Qué pasa?","What's happening?","keh PAH-sah"],
+  [30,"Me llamo ____. Mucho gusto.","My name is ____. Nice to meet you.","meh YAH-moh ___. MOO-choh GOOS-toh"],
+  [30,"Me gusta este lugar porque está tranquilo","I like this place because it's calm","meh GOOS-tah EHS-teh loo-GAR POR-keh ehs-TAH trahn-KEE-loh"],
+  [30,"Muchas gracias. Que descanses.","Thank you very much. Rest well.","MOO-chahs GRAH-syahs. keh dehs-KAHN-sehs"],
+  [30,"¡Felicidades!","Congratulations!","feh-lee-see-DAH-dehs"],
+  [30,"Gracias por hacer el viaje","Thank you for making the journey","GRAH-syahs por ah-SEHR ehl BYAH-heh"],
+  [30,"Esto no es el final. Es el comienzo.","This isn't the end. It's the beginning.","EHS-toh noh ehs ehl fee-NAHL. ehs ehl koh-MYEHN-soh"]
+];
+
+const CARDS = RAW.map((r,i)=>({id:i,day:r[0],week:Math.ceil(r[0]/5),spanish:r[1],english:r[2],pron:r[3]}));
+
+let queue=[], idx=0, known=new Set(), again=new Set(), flipped=false, studyMode='all', activeWeek=0;
+const $=id=>document.getElementById(id);
+
+// Header + "All" tab counts
+$('headerSub').textContent=`${CARDS.length} Phrases · 6 Weeks · Beginner`;
+$('allTab').textContent=`All ${CARDS.length}`;
+
+function buildQueue(){
+  let base=activeWeek===0?[...CARDS]:CARDS.filter(c=>c.week===activeWeek);
+  if(studyMode==='again') base=base.filter(c=>missed.has(c.id));
+  queue=base; idx=0; known.clear(); again.clear(); render();
+}
+// cards marked "Again" survive a rebuild so "Review Missed Only" has something to show
+let missed=new Set();
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+function render(){
+  const total=queue.length, done=known.size+again.size;
+  const pct=total?Math.round(known.size/total*100):0;
+  $('progressFill').style.width=pct+'%';
+  $('progressText').textContent=`${known.size} of ${total} mastered · ${done} reviewed`;
+  $('progressPct').textContent=pct+'%';
+  $('statRemain').textContent=total-done;
+  $('statKnown').textContent=known.size;
+  $('statReview').textContent=again.size;
+  if(!total){
+    $('cardSpanish').textContent='No missed cards 🎉';
+    $('cardEnglish').textContent='—'; $('cardPron').textContent='';
+    $('cardDayTitle').textContent='Switch Study Mode back to All';
+    $('cardCounter').textContent='0 / 0';
+    $('prevBtn').disabled=true; $('nextBtn').disabled=true;
+    $('verdictRow').style.display='none';
+    return;
+  }
+  if(idx>=total){showDone();return;}
+  const c=queue[idx];
+  $('cardSpanish').textContent=c.spanish;
+  $('cardEnglish').textContent=c.english;
+  $('cardPron').textContent=c.pron||'—';
+  $('cardDayTitle').textContent=DAYS[c.day]||'';
+  const b=`Day ${c.day} · W${c.week}`;
+  $('cardBadge').textContent=b; $('cardBadgeBack').textContent=b;
+  $('cardCounter').textContent=`${idx+1} / ${total}`;
+  $('flipCard').classList.remove('flipped'); flipped=false;
+  $('verdictRow').style.display='none';
+  $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx>=total-1;
+}
+function showDone(){
+  $('cardArea').style.display='none'; $('doneScreen').classList.add('visible');
+  const k=known.size,a=again.size,t=queue.length;
+  $('doneKnown').textContent=k; $('doneReview').textContent=a;
+  $('donePct').textContent=t?Math.round(k/t*100)+'%':'0%';
+  $('reviewWrongBtn').style.display=a?'inline-flex':'none';
+}
+function hideDone(){$('doneScreen').classList.remove('visible');$('cardArea').style.display='flex';}
+
+function flip(){
+  if(!queue.length||idx>=queue.length) return;
+  $('flipCard').classList.toggle('flipped'); flipped=!flipped;
+  $('verdictRow').style.display=flipped?'flex':'none';
+}
+function verdict(gotIt){
+  const c=queue[idx]; if(!c) return;
+  if(gotIt){known.add(c.id);again.delete(c.id);missed.delete(c.id);}
+  else{again.add(c.id);known.delete(c.id);missed.add(c.id);}
+  if(idx<queue.length-1){idx++;render();}
+  else{render();showDone();}
+}
+function setStudyMode(m){
+  studyMode=m;
+  $('studyModeBtn').textContent=m==='all'?'Study Mode: All':'Study Mode: Missed';
+  $('studyModeBtn').classList.toggle('on',m==='again');
+}
+
+$('flipCard').addEventListener('click',flip);
+$('prevBtn').addEventListener('click',()=>{if(idx>0){idx--;render();}});
+$('nextBtn').addEventListener('click',()=>{if(idx<queue.length-1){idx++;render();}});
+$('knowBtn').addEventListener('click',()=>verdict(true));
+$('againBtn').addEventListener('click',()=>verdict(false));
+$('shuffleBtn').addEventListener('click',()=>{shuffle(queue);idx=0;known.clear();again.clear();render();hideDone();});
+$('resetBtn').addEventListener('click',()=>{missed.clear();setStudyMode('all');buildQueue();hideDone();});
+$('restartBtn').addEventListener('click',()=>{buildQueue();hideDone();});
+$('reviewWrongBtn').addEventListener('click',()=>{setStudyMode('again');buildQueue();hideDone();});
+$('studyModeBtn').addEventListener('click',()=>{setStudyMode(studyMode==='all'?'again':'all');buildQueue();hideDone();});
+$('weekTabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.week-tab'); if(!btn)return;
+  document.querySelectorAll('.week-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeWeek=parseInt(btn.dataset.week);
+  setStudyMode('all'); buildQueue(); hideDone();
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.altKey||e.ctrlKey||e.metaKey) return;
+  const doneVisible=$('doneScreen').classList.contains('visible');
+  switch(e.key){
+    case 'ArrowRight': e.preventDefault(); if(!doneVisible) $('nextBtn').click(); break;
+    case 'ArrowLeft':  e.preventDefault(); if(!doneVisible) $('prevBtn').click(); break;
+    case 'Enter': case ' ':
+      e.preventDefault();
+      if(doneVisible) $('restartBtn').click(); else flip();
+      break;
+    case '1': if(flipped&&!doneVisible) verdict(true); break;
+    case '2': if(flipped&&!doneVisible) verdict(false); break;
+  }
+});
+
+buildQueue();
+</script>
 </body>
 </html>
+
