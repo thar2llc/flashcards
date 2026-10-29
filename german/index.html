@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Quest Flashcards — 30-Day Blitz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="header-brand">🇩🇪 German Quest Flashcards</div>
+    <div class="header-sub">180 Phrases · 6 Weeks · Beginner</div>
+  </div>
+  <a href="../" class="header-back">← All Decks</a>
+</header>
+
+<div class="page-inner">
+
+  <!-- Week filter -->
+  <div class="week-tabs" id="weekTabs">
+    <button class="week-tab active" data-week="0">All 180</button>
+    <button class="week-tab" data-week="1">Week 1</button>
+    <button class="week-tab" data-week="2">Week 2</button>
+    <button class="week-tab" data-week="3">Week 3</button>
+    <button class="week-tab" data-week="4">Week 4</button>
+    <button class="week-tab" data-week="5">Week 5</button>
+    <button class="week-tab" data-week="6">Week 6</button>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-row">
+    <button class="ctrl-btn" id="shuffleBtn">Shuffle</button>
+    <button class="ctrl-btn" id="studyModeBtn">Study Mode: All</button>
+    <button class="ctrl-btn" id="resetBtn">Reset</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stat-pill">Remaining <span id="statRemain">180</span></div>
+    <div class="stat-pill">Known <span id="statKnown">0</span></div>
+    <div class="stat-pill">Review <span id="statReview">0</span></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" style="margin-bottom:4px;">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div style="font-size:.7rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:16px;">
+    <span id="progressText">0 of 180 reviewed</span>
+    <span id="progressPct">0%</span>
+  </div>
+
+  <!-- Card -->
+  <div class="card-area" id="cardArea">
+    <div class="flip-card" id="flipCard">
+      <div class="flip-inner">
+        <div class="card-face card-front">
+          <div class="card-badge" id="cardBadge">Day 1 · W1</div>
+          <div class="card-eyebrow">GERMAN</div>
+          <div class="card-main-text" id="cardGerman">—</div>
+          <div class="card-tap-hint">tap to reveal</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-badge-back" id="cardBadgeBack">Day 1 · W1</div>
+          <div class="card-eyebrow-back">ENGLISH</div>
+          <div class="card-main-back" id="cardEnglish">—</div>
+          <div class="card-pron" id="cardPron">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="card-counter" id="cardCounter">1 / 180</span>
+      <button class="btn primary" id="nextBtn">Next →</button>
+    </div>
+
+    <div class="verdict-row" id="verdictRow" style="display:none;">
+      <button class="verdict-btn again" id="againBtn">↩ Again</button>
+      <button class="verdict-btn know"  id="knowBtn">✓ Got it</button>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="done-screen" id="doneScreen">
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--gold);">★</div>
+    <div class="done-title">Deck Complete!</div>
+    <div class="done-sub">You've reviewed all the cards in this set.</div>
+    <div class="done-stats">
+      <div class="done-stat"><div class="done-stat-n" id="doneKnown">0</div><div class="done-stat-label">Known</div></div>
+      <div class="done-stat"><div class="done-stat-n" id="doneReview">0</div><div class="done-stat-label">For Review</div></div>
+      <div class="done-stat"><div class="done-stat-n" id="donePct">0%</div><div class="done-stat-label">Mastered</div></div>
+    </div>
+    <button class="btn primary" id="restartBtn" style="margin-top:6px;">Study Again</button>
+    <button class="btn" id="reviewWrongBtn" style="margin-top:4px;">Review Missed Only</button>
+  </div>
+
+</div><!-- /page-inner -->
+
+<script>
+const CARDS = [{"german":"Guten Morgen!","english":"Good morning!","pron":"GOO-ten MOR-gen","week":1,"day":1},{"german":"Guten Tag!","english":"Good day!","pron":"GOO-ten TAHK","week":1,"day":1},{"german":"Hallo!","english":"Hello!","pron":"HAH-lo","week":1,"day":1},{"german":"Wie geht es Ihnen?","english":"How are you? (formal)","pron":"Vee gayt es EE-nen","week":1,"day":1},{"german":"Danke schön.","english":"Thank you very much.","pron":"DAHN-ke shern","week":1,"day":1},{"german":"Bitte.","english":"Please / You're welcome.","pron":"BIT-teh","week":1,"day":1},{"german":"Entschuldigung!","english":"Excuse me!","pron":"Ent-SHOOL-dig-oong","week":1,"day":2},{"german":"Wo ist…?","english":"Where is…?","pron":"Vo ist","week":1,"day":2},{"german":"die Toilette","english":"the toilet","pron":"dee toy-LET-teh","week":1,"day":2},{"german":"Ich verstehe nicht.","english":"I don't understand.","pron":"Ikh fair-SHTAY-eh nikht","week":1,"day":2},{"german":"Sprechen Sie Englisch?","english":"Do you speak English?","pron":"SHPREKH-en zee ENG-lish","week":1,"day":2},{"german":"Wie bitte?","english":"Pardon?","pron":"Vee BIT-teh","week":1,"day":2},{"german":"Wie heißen Sie?","english":"What is your name? (formal)","pron":"Vee HYE-sen zee","week":1,"day":3},{"german":"Ich heiße…","english":"My name is…","pron":"Ikh HYE-sseh","week":1,"day":3},{"german":"Woher kommen Sie?","english":"Where are you from?","pron":"Vo-HAIR KOM-en zee","week":1,"day":3},{"german":"Ich komme aus…","english":"I come from…","pron":"Ikh KOM-eh ows","week":1,"day":3},{"german":"Freut mich!","english":"Nice to meet you!","pron":"Froyt mikh","week":1,"day":3},{"german":"Auf Wiedersehen!","english":"Goodbye!","pron":"Owf VEE-der-zayn","week":1,"day":3},{"german":"Das ist…","english":"That is…","pron":"Dahs ist","week":1,"day":4},{"german":"Was ist das?","english":"What is that?","pron":"Vahs ist dahs","week":1,"day":4},{"german":"Wie viel kostet das?","english":"How much does that cost?","pron":"Vee feel KOS-tet dahs","week":1,"day":4},{"german":"Zu teuer.","english":"Too expensive.","pron":"Tsoo TOY-er","week":1,"day":4},{"german":"Ich nehme das.","english":"I'll take that.","pron":"Ikh NAY-meh dahs","week":1,"day":4},{"german":"Kann ich zahlen?","english":"Can I pay?","pron":"Kahn ikh TSAH-len","week":1,"day":4},{"german":"Haben Sie…?","english":"Do you have…?","pron":"HAH-ben zee","week":1,"day":5},{"german":"Ich möchte…","english":"I would like…","pron":"Ikh MERKH-teh","week":1,"day":5},{"german":"…bitte.","english":"…please.","pron":"BIT-teh","week":1,"day":5},{"german":"Eine Tasse Kaffee, bitte.","english":"A cup of coffee, please.","pron":"EYE-neh TAH-seh KAH-fay BIT-teh","week":1,"day":5},{"german":"Mit Milch?","english":"With milk?","pron":"Mit milkh","week":1,"day":5},{"german":"Ja, bitte! / Nein, danke.","english":"Yes, please! / No, thank you.","pron":"Yah BIT-teh / Nyne DAHN-keh","week":1,"day":5},{"german":"Geradeaus.","english":"Straight ahead.","pron":"Geh-RAH-deh-ows","week":2,"day":6},{"german":"Links.","english":"Left.","pron":"Links","week":2,"day":6},{"german":"Rechts.","english":"Right.","pron":"Rekhts","week":2,"day":6},{"german":"An der Ecke.","english":"At the corner.","pron":"Ahn dair EK-eh","week":2,"day":6},{"german":"Wie weit ist es?","english":"How far is it?","pron":"Vee vyte ist es","week":2,"day":6},{"german":"Können Sie mir helfen?","english":"Can you help me?","pron":"KER-nen zee meer HEL-fen","week":2,"day":6},{"german":"Eine Fahrkarte nach…","english":"One ticket to…","pron":"EYE-neh FAHR-kar-teh nahkh","week":2,"day":7},{"german":"Hin und zurück.","english":"Return (round trip).","pron":"Hin oont tsoo-ROOK","week":2,"day":7},{"german":"Wann fährt der Zug ab?","english":"When does the train leave?","pron":"Vahn fairt dair tsook ahp","week":2,"day":7},{"german":"Gleis zwei.","english":"Platform two.","pron":"Glyce tsvye","week":2,"day":7},{"german":"Verspätet.","english":"Delayed.","pron":"Fair-SHPAY-tet","week":2,"day":7},{"german":"Wo ist der Ausgang?","english":"Where is the exit?","pron":"Vo ist dair OWS-gahng","week":2,"day":7},{"german":"Einen Tisch für zwei, bitte.","english":"A table for two, please.","pron":"EYE-nen tish foor tsvye BIT-teh","week":2,"day":8},{"german":"Die Speisekarte, bitte.","english":"The menu, please.","pron":"Dee SHPYE-seh-kar-teh BIT-teh","week":2,"day":8},{"german":"Was empfehlen Sie?","english":"What do you recommend?","pron":"Vahs em-PFAY-len zee","week":2,"day":8},{"german":"Ich bin allergisch gegen…","english":"I am allergic to…","pron":"Ikh bin ah-LAIR-gish GAY-gen","week":2,"day":8},{"german":"Die Rechnung, bitte.","english":"The bill, please.","pron":"Dee REKH-noong BIT-teh","week":2,"day":8},{"german":"Es war ausgezeichnet!","english":"It was excellent!","pron":"Es var OWS-geh-tsykh-net","week":2,"day":8},{"german":"Welche Linie fährt zum…?","english":"Which line goes to…?","pron":"VEL-kheh LEE-nyeh fairt tsoom","week":2,"day":9},{"german":"Ich muss umsteigen.","english":"I have to change (trains).","pron":"Ikh moos OOM-shty-gen","week":2,"day":9},{"german":"Nächste Haltestelle.","english":"Next stop.","pron":"NEKH-steh HAHL-teh-shtel-eh","week":2,"day":9},{"german":"Bitte einsteigen!","english":"Please board!","pron":"BIT-teh EYE-n-shty-gen","week":2,"day":9},{"german":"Vorsicht!","english":"Careful! / Watch out!","pron":"FOR-zikht","week":2,"day":9},{"german":"Danke für Ihre Hilfe.","english":"Thank you for your help.","pron":"DAHN-keh foor EE-reh HIL-feh","week":2,"day":9},{"german":"Gibt es hier…?","english":"Is there a … here?","pron":"Gibt es heer","week":2,"day":10},{"german":"in der Nähe","english":"nearby","pron":"in dair NAY-eh","week":2,"day":10},{"german":"die Apotheke","english":"the pharmacy","pron":"dee Ah-po-TAY-keh","week":2,"day":10},{"german":"das Krankenhaus","english":"the hospital","pron":"dahs KRAHN-ken-hows","week":2,"day":10},{"german":"Ich brauche…","english":"I need…","pron":"Ikh BROW-kheh","week":2,"day":10},{"german":"Können Sie das aufschreiben?","english":"Can you write that down?","pron":"KER-nen zee dahs OWF-shry-ben","week":2,"day":10},{"german":"Was machst du so?","english":"What do you do?","pron":"Vahs makhst doo zo","week":3,"day":11},{"german":"Ich arbeite als…","english":"I work as…","pron":"Ikh AR-by-teh ahls","week":3,"day":11},{"german":"Wie lange schon?","english":"How long already?","pron":"Vee LAHNG-eh shon","week":3,"day":11},{"german":"Das klingt interessant!","english":"That sounds interesting!","pron":"Dahs klingt in-teh-REH-sahnt","week":3,"day":11},{"german":"Und du?","english":"And you?","pron":"Oont doo","week":3,"day":11},{"german":"Ich bin Student/in.","english":"I'm a student.","pron":"Ikh bin shtoo-DENT/in","week":3,"day":11},{"german":"Ich fühle mich…","english":"I feel…","pron":"Ikh FOO-leh mikh","week":3,"day":12},{"german":"müde","english":"tired","pron":"MOO-deh","week":3,"day":12},{"german":"glücklich","english":"happy","pron":"GLOOK-likh","week":3,"day":12},{"german":"gestresst","english":"stressed","pron":"geh-SHRESST","week":3,"day":12},{"german":"Ich brauche eine Pause.","english":"I need a break.","pron":"Ikh BROW-kheh EYE-neh POW-zeh","week":3,"day":12},{"german":"Es geht mir gut.","english":"I'm doing well.","pron":"Es gayt meer goot","week":3,"day":12},{"german":"Kein Problem!","english":"No problem!","pron":"Kyne pro-BLAYM","week":3,"day":13},{"german":"Alles gut.","english":"All good.","pron":"AH-les goot","week":3,"day":13},{"german":"Machen Sie sich keine Sorgen.","english":"Don't worry.","pron":"MAKH-en zee zikh KYE-neh ZOR-gen","week":3,"day":13},{"german":"Ich verstehe.","english":"I understand.","pron":"Ikh fair-SHTAY-eh","week":3,"day":13},{"german":"Können Sie das wiederholen?","english":"Can you repeat that?","pron":"KER-nen zee dahs VEE-der-ho-len","week":3,"day":13},{"german":"Langsamer, bitte.","english":"Slower, please.","pron":"LAHNG-zah-mer BIT-teh","week":3,"day":13},{"german":"Ich finde das…","english":"I find that…","pron":"Ikh FIN-deh dahs","week":3,"day":14},{"german":"gut / schlecht","english":"good / bad","pron":"goot / shlekht","week":3,"day":14},{"german":"interessant / langweilig","english":"interesting / boring","pron":"in-teh-REH-sahnt / LAHNG-vy-lig","week":3,"day":14},{"german":"Meiner Meinung nach…","english":"In my opinion…","pron":"MY-ner MY-noong nahkh","week":3,"day":14},{"german":"Das stimmt.","english":"That's true.","pron":"Dahs shtimt","week":3,"day":14},{"german":"Ich bin nicht sicher.","english":"I'm not sure.","pron":"Ikh bin nikht ZI-kher","week":3,"day":14},{"german":"Wie kann ich helfen?","english":"How can I help?","pron":"Vee kahn ikh HEL-fen","week":3,"day":15},{"german":"Was brauchen Sie?","english":"What do you need?","pron":"Vahs BROW-khen zee","week":3,"day":15},{"german":"Gern geschehen!","english":"My pleasure!","pron":"Gairn geh-SHAY-en","week":3,"day":15},{"german":"Mit Vergnügen.","english":"With pleasure.","pron":"Mit fair-GNOO-gen","week":3,"day":15},{"german":"Es tut mir leid.","english":"I'm sorry.","pron":"Es toot meer lyte","week":3,"day":15},{"german":"Entschuldigen Sie bitte.","english":"Excuse me, please.","pron":"Ent-SHOOL-dig-en zee BIT-teh","week":3,"day":15},{"german":"Darf ich vorstellen…?","english":"May I introduce…?","pron":"Darf ikh FOR-shtel-en","week":4,"day":16},{"german":"Das ist mein Freund / meine Freundin.","english":"This is my friend (m/f).","pron":"Dahs ist myne froynd / MY-neh FROYN-din","week":4,"day":16},{"german":"Woher kennen Sie sich?","english":"How do you know each other?","pron":"Vo-HAIR KEN-en zee zikh","week":4,"day":16},{"german":"Schon lange?","english":"For a long time?","pron":"Shon LAHNG-eh","week":4,"day":16},{"german":"Wie nett!","english":"How nice!","pron":"Vee net","week":4,"day":16},{"german":"Wir kennen uns seit…","english":"We've known each other since…","pron":"Veer KEN-en oons zyte","week":4,"day":16},{"german":"Was gibt es Neues?","english":"What's new?","pron":"Vahs gibt es NOY-es","week":4,"day":17},{"german":"Nichts Besonderes.","english":"Nothing special.","pron":"Nikhts beh-ZON-deh-res","week":4,"day":17},{"german":"Hast du gehört…?","english":"Have you heard…?","pron":"Hahst doo geh-HERT","week":4,"day":17},{"german":"Wirklich?","english":"Really?","pron":"VEER-likh","week":4,"day":17},{"german":"Das glaube ich nicht.","english":"I don't believe it.","pron":"Dahs GLOW-beh ikh nikht","week":4,"day":17},{"german":"Spannend!","english":"Exciting!","pron":"SHPAH-nend","week":4,"day":17},{"german":"Übrigens…","english":"By the way…","pron":"OO-bree-gens","week":4,"day":18},{"german":"Außerdem…","english":"Furthermore…","pron":"OWS-ser-daym","week":4,"day":18},{"german":"Trotzdem…","english":"Nevertheless…","pron":"TROTS-daym","week":4,"day":18},{"german":"Deshalb…","english":"Therefore…","pron":"DES-hahlp","week":4,"day":18},{"german":"Einerseits… andererseits…","english":"On the one hand… on the other…","pron":"EYE-ner-zyts… AHN-deh-rer-zyts","week":4,"day":18},{"german":"Zum Beispiel…","english":"For example…","pron":"Tsoom BY-shpeel","week":4,"day":18},{"german":"Hast du Lust auf…?","english":"Do you feel like…?","pron":"Hahst doo loost owf","week":4,"day":19},{"german":"Das klingt toll!","english":"That sounds great!","pron":"Dahs klingt tol","week":4,"day":19},{"german":"Wann passt es dir?","english":"When suits you?","pron":"Vahn pahst es deer","week":4,"day":19},{"german":"Sollen wir…?","english":"Shall we…?","pron":"ZOL-en veer","week":4,"day":19},{"german":"Ich freue mich darauf.","english":"I look forward to it.","pron":"Ikh FROY-eh mikh dah-ROWF","week":4,"day":19},{"german":"Bis dann!","english":"See you then!","pron":"Bis dahn","week":4,"day":19},{"german":"Unter uns…","english":"Between us…","pron":"OON-ter oons","week":4,"day":20},{"german":"Weißt du was?","english":"You know what?","pron":"Vyest doo vahs","week":4,"day":20},{"german":"Das ist ein Geheimtipp.","english":"That's an insider tip.","pron":"Dahs ist yn geh-HYME-tip","week":4,"day":20},{"german":"Unbedingt versuchen!","english":"Definitely try it!","pron":"OON-beh-dingt fair-ZOO-khen","week":4,"day":20},{"german":"Du wirst es lieben.","english":"You'll love it.","pron":"Doo veerst es LEE-ben","week":4,"day":20},{"german":"Sag mal…","english":"Say…","pron":"Zahk mahl","week":4,"day":20},{"german":"Das ist ein Problem.","english":"That is a problem.","pron":"Dahs ist yn pro-BLAYM","week":5,"day":21},{"german":"Wie kann ich das lösen?","english":"How can I solve this?","pron":"Vee kahn ikh dahs LER-zen","week":5,"day":21},{"german":"Gibt es eine Alternative?","english":"Is there an alternative?","pron":"Gibt es EYE-neh al-ter-nah-TEE-veh","week":5,"day":21},{"german":"Ich brauche einen Moment.","english":"I need a moment.","pron":"Ikh BROW-kheh EYE-nen mo-MENT","week":5,"day":21},{"german":"Können wir das klären?","english":"Can we clarify this?","pron":"KER-nen veer dahs KLAY-ren","week":5,"day":21},{"german":"Kein Stress.","english":"No stress.","pron":"Kyne shtres","week":5,"day":21},{"german":"Ich habe einen Fehler gemacht.","english":"I made a mistake.","pron":"Ikh HAH-beh EYE-nen FAY-ler geh-MAKHT","week":5,"day":22},{"german":"Das war mein Fehler.","english":"That was my fault.","pron":"Dahs var myne FAY-ler","week":5,"day":22},{"german":"Wie kann ich das wiedergutmachen?","english":"How can I make it up?","pron":"Vee kahn ikh dahs VEE-der-goot-makh-en","week":5,"day":22},{"german":"Ich entschuldige mich.","english":"I apologise.","pron":"Ikh ent-SHOOL-dig-eh mikh","week":5,"day":22},{"german":"Danke für Ihr Verständnis.","english":"Thank you for your understanding.","pron":"DAHN-keh foor eer fair-SHTENT-nis","week":5,"day":22},{"german":"Schwamm drüber!","english":"Let's move on!","pron":"Shvahm DROO-ber","week":5,"day":22},{"german":"Bleiben Sie ruhig.","english":"Stay calm.","pron":"BLY-ben zee ROO-ig","week":5,"day":23},{"german":"Atmen Sie tief.","english":"Breathe deeply.","pron":"AHT-men zee teef","week":5,"day":23},{"german":"Es wird alles gut.","english":"Everything will be fine.","pron":"Es veert AH-les goot","week":5,"day":23},{"german":"Wir schaffen das.","english":"We can do this.","pron":"Veer SHAF-en dahs","week":5,"day":23},{"german":"Schritt für Schritt.","english":"Step by step.","pron":"Shrit foor shrit","week":5,"day":23},{"german":"Keine Panik!","english":"No panic!","pron":"KYE-neh PAH-nik","week":5,"day":23},{"german":"Es war schön, Sie zu treffen.","english":"It was nice to meet you.","pron":"Es var shern zee tsoo TREH-fen","week":5,"day":24},{"german":"Wir müssen leider gehen.","english":"We unfortunately have to go.","pron":"Veer MOO-sen LY-der GAY-en","week":5,"day":24},{"german":"Ich muss jetzt los.","english":"I have to leave now.","pron":"Ikh moos yetzt los","week":5,"day":24},{"german":"Machen Sie's gut!","english":"Take care!","pron":"MAKH-en zee's goot","week":5,"day":24},{"german":"Bis bald!","english":"See you soon!","pron":"Bis bahlt","week":5,"day":24},{"german":"Es war mir ein Vergnügen.","english":"It was a pleasure.","pron":"Es var meer yn fair-GNOO-gen","week":5,"day":24},{"german":"Können wir einen Kompromiss finden?","english":"Can we find a compromise?","pron":"KER-nen veer EYE-nen kom-PRO-mis FIN-den","week":5,"day":25},{"german":"Ich sehe Ihren Standpunkt.","english":"I see your point.","pron":"Ikh ZAY-eh EE-ren SHTAHNT-poonkt","week":5,"day":25},{"german":"Lassen Sie uns neu anfangen.","english":"Let's start fresh.","pron":"LAH-sen zee oons noy AHN-fahng-en","week":5,"day":25},{"german":"Einverstanden.","english":"Agreed.","pron":"EYE-n-fair-shtahn-den","week":5,"day":25},{"german":"Abgemacht!","english":"It's a deal!","pron":"AHB-geh-mahkht","week":5,"day":25},{"german":"Gut gelöst!","english":"Well resolved!","pron":"Goot geh-LERST","week":5,"day":25},{"german":"Könnten Sie mir sagen…?","english":"Could you tell me…?","pron":"KERN-ten zee meer ZAH-gen","week":6,"day":26},{"german":"Es liegt um die Ecke.","english":"It's around the corner.","pron":"Es leekt oom dee EK-eh","week":6,"day":26},{"german":"ungefähr zehn Minuten zu Fuß","english":"approximately ten minutes on foot","pron":"OON-geh-fair tsayn mih-NOO-ten tsoo foos","week":6,"day":26},{"german":"Nehmen Sie die erste Straße links.","english":"Take the first street on the left.","pron":"NAY-men zee dee ERS-teh SHTRAH-seh links","week":6,"day":26},{"german":"Sie können es nicht verfehlen.","english":"You can't miss it.","pron":"Zee KER-nen es nikht fair-FAY-len","week":6,"day":26},{"german":"Vielen Dank für Ihre Hilfe!","english":"Many thanks for your help!","pron":"FEE-len dahnk feer EE-reh HIL-feh","week":6,"day":26},{"german":"Ich hätte gern…","english":"I would like…","pron":"Ikh HET-teh gairn","week":6,"day":27},{"german":"Was würden Sie empfehlen?","english":"What would you recommend?","pron":"Vahs VEER-den zee em-FAY-len","week":6,"day":27},{"german":"Schmeckt das gut zusammen?","english":"Does that taste good together?","pron":"Shmekt dahs goot tsoo-ZAH-men","week":6,"day":27},{"german":"Könnte ich das auch ohne… haben?","english":"Could I have that without…?","pron":"KERN-teh ikh dahs owkh OH-neh HAH-ben","week":6,"day":27},{"german":"Das war ausgezeichnet.","english":"That was excellent.","pron":"Dahs var OWS-geh-tsykh-net","week":6,"day":27},{"german":"Ich komme gern wieder!","english":"I'll gladly come back!","pron":"Ikh KOM-eh gairn VEE-der","week":6,"day":27},{"german":"Was hälst du davon, wenn…?","english":"What do you think about…?","pron":"Vahs helst doo dah-FON ven","week":6,"day":28},{"german":"Wäre es möglich…?","english":"Would it be possible…?","pron":"VAY-reh es MER-likh","week":6,"day":28},{"german":"Ich würde vorschlagen…","english":"I would suggest…","pron":"Ikh VEER-deh FOR-shlah-gen","week":6,"day":28},{"german":"Das hängt davon ab, ob…","english":"That depends on whether…","pron":"Dahs hengt dah-FON ahp ob","week":6,"day":28},{"german":"Lass uns das gemeinsam angehen.","english":"Let's tackle this together.","pron":"Lahs oons dahs geh-MYNE-zahm AHN-gay-en","week":6,"day":28},{"german":"Ich bin dabei!","english":"I'm in!","pron":"Ikh bin dah-BY","week":6,"day":28},{"german":"Selbst wenn es schwierig ist…","english":"Even when it's difficult…","pron":"Zelpst ven es SHVEE-rikh ist","week":6,"day":29},{"german":"Ich mache weiter.","english":"I keep going.","pron":"Ikh MAH-kheh VY-ter","week":6,"day":29},{"german":"Aus Fehlern lernt man.","english":"One learns from mistakes.","pron":"Ows FAY-lern lairnt mahn","week":6,"day":29},{"german":"Ich bin stolz auf mich.","english":"I'm proud of myself.","pron":"Ikh bin shtolts owf mikh","week":6,"day":29},{"german":"Das war eine Herausforderung.","english":"That was a challenge.","pron":"Dahs var EYE-neh heh-ROWS-for-der-oong","week":6,"day":29},{"german":"Und ich habe sie gemeistert!","english":"And I mastered it!","pron":"Oont ikh HAH-beh zee geh-MY-stert","week":6,"day":29},{"german":"Ich spreche jetzt Grundkenntnisse Deutsch.","english":"I now speak basic German.","pron":"Ikh SHPREKH-eh yetst GROONT-kent-nis-eh Doytsh","week":6,"day":30},{"german":"Ich habe 30 Tage durchgehalten.","english":"I kept going for 30 days.","pron":"Ikh HAH-beh dry-sig TAH-geh DOORKH-geh-hal-ten","week":6,"day":30},{"german":"Ich bin bereit für echte Gespräche.","english":"I'm ready for real conversations.","pron":"Ikh bin beh-RYTE feer EKH-teh geh-SHPRAY-kheh","week":6,"day":30},{"german":"Das war eine unvergessliche Reise.","english":"That was an unforgettable journey.","pron":"Dahs var EYE-neh oon-fair-GES-likh-eh RY-zeh","week":6,"day":30},{"german":"Auf Wiedersehen, Café Morgen!","english":"Goodbye, Café Morgen — until next time!","pron":"Owf VEE-der-zayn kah-FAY MOR-gen","week":6,"day":30},{"german":"Herzlichen Glückwunsch!","english":"Congratulations!","pron":"HAIRTS-likh-en GLUEK-voonsh","week":6,"day":30}];
+
+let queue=[], idx=0, known=new Set(), again=new Set(), flipped=false, studyMode='all', activeWeek=0;
+const $=id=>document.getElementById(id);
+
+function buildQueue(){
+  let base=activeWeek===0?[...CARDS]:CARDS.filter(c=>c.week===activeWeek);
+  if(studyMode==='again') base=base.filter(c=>again.has(c.german));
+  queue=base; idx=0; known.clear(); again.clear(); render();
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+function render(){
+  const done=known.size+again.size, total=queue.length, pct=total?Math.round(done/total*100):0;
+  $('progressFill').style.width=pct+'%';
+  $('progressText').textContent=`${done} of ${total} reviewed`;
+  $('progressPct').textContent=pct+'%';
+  $('statRemain').textContent=total-done;
+  $('statKnown').textContent=known.size;
+  $('statReview').textContent=again.size;
+  if(idx>=queue.length){showDone();return;}
+  const c=queue[idx];
+  $('cardGerman').textContent=c.german;
+  $('cardEnglish').textContent=c.english;
+  $('cardPron').textContent=c.pron||'—';
+  const b=`Day ${c.day} · W${c.week}`;
+  $('cardBadge').textContent=b; $('cardBadgeBack').textContent=b;
+  $('cardCounter').textContent=`${idx+1} / ${queue.length}`;
+  $('flipCard').classList.remove('flipped'); flipped=false;
+  $('verdictRow').style.display='none';
+  $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx>=queue.length-1;
+}
+function showDone(){
+  $('cardArea').style.display='none'; $('doneScreen').classList.add('visible');
+  const k=known.size,a=again.size,t=queue.length;
+  $('doneKnown').textContent=k; $('doneReview').textContent=a;
+  $('donePct').textContent=t?Math.round(k/t*100)+'%':'0%';
+}
+function hideDone(){$('doneScreen').classList.remove('visible');$('cardArea').style.display='flex';}
+
+$('flipCard').addEventListener('click',()=>{
+  $('flipCard').classList.toggle('flipped'); flipped=!flipped;
+  $('verdictRow').style.display=flipped?'flex':'none';
+});
+$('prevBtn').addEventListener('click',()=>{if(idx>0){idx--;render();}});
+$('nextBtn').addEventListener('click',()=>{if(idx<queue.length-1){idx++;render();}});
+$('knowBtn').addEventListener('click',()=>{known.add(queue[idx].german);again.delete(queue[idx].german);if(idx<queue.length-1){idx++;}else{render();showDone();return;}render();});
+$('againBtn').addEventListener('click',()=>{again.add(queue[idx].german);known.delete(queue[idx].german);if(idx<queue.length-1){idx++;}else{render();showDone();return;}render();});
+$('shuffleBtn').addEventListener('click',()=>{shuffle(queue);idx=0;render();hideDone();});
+$('resetBtn').addEventListener('click',()=>{buildQueue();hideDone();});
+$('restartBtn').addEventListener('click',()=>{buildQueue();hideDone();});
+$('reviewWrongBtn').addEventListener('click',()=>{studyMode='again';$('studyModeBtn').textContent='Study Mode: Missed';$('studyModeBtn').classList.add('on');buildQueue();hideDone();});
+$('studyModeBtn').addEventListener('click',()=>{studyMode=studyMode==='all'?'again':'all';$('studyModeBtn').textContent=studyMode==='all'?'Study Mode: All':'Study Mode: Missed';$('studyModeBtn').classList.toggle('on',studyMode==='again');buildQueue();hideDone();});
+$('weekTabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.week-tab'); if(!btn)return;
+  document.querySelectorAll('.week-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeWeek=parseInt(btn.dataset.week);
+  studyMode='all';$('studyModeBtn').textContent='Study Mode: All';$('studyModeBtn').classList.remove('on');
+  buildQueue();hideDone();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='l') $('nextBtn').click();
+  if(e.key==='ArrowLeft' ||e.key==='h') $('prevBtn').click();
+  if(e.key===' '||e.key==='Enter'){e.preventDefault();$('flipCard').click();}
+  if(e.key==='1'&&flipped) $('knowBtn').click();
+  if(e.key==='2'&&flipped) $('againBtn').click();
+});
+buildQueue();
+</script>
+</body>
+</html>
