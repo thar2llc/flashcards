@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>50 Medical Terms — Done With Hourly</title>
+<meta name="description" content="A free flashcard bonus for readers of Done With Hourly, by Simon Grace — 50 medical terminology terms grouped by category.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2A4A;
+    --gold:#E8A020;
+    --cream:#FAF6EE;
+    --green:#3A7D44;
+    --ink:#1B2A4A;
+    --muted:#6b7280;
+    --card-bg:#ffffff;
+    --card-back-bg:#1B2A4A;
+    --border:#e5decf;
+    --danger:#b3432f;
+    --bg:var(--cream);
+    --surface:#ffffff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14213a;
+      --surface:#1c2c4d;
+      --ink:#f3ede0;
+      --muted:#b7c0d8;
+      --card-bg:#1c2c4d;
+      --card-back-bg:#0f1830;
+      --border:#2c3c63;
+      --cream:#14213a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14213a;
+    --surface:#1c2c4d;
+    --ink:#f3ede0;
+    --muted:#b7c0d8;
+    --card-bg:#1c2c4d;
+    --card-back-bg:#0f1830;
+    --border:#2c3c63;
+    --cream:#14213a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+    padding:0 16px 48px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:36px 0 18px;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--green);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(28px,5vw,40px);
+    margin:0 0 8px;
+    color:var(--ink);
+  }
+  .sub{
+    color:var(--muted);
+    font-size:15px;
+    max-width:520px;
+    margin:0 auto;
+    line-height:1.5;
+  }
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:22px 0 10px;
+  }
+  .tab{
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--ink);
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .tab:hover{border-color:var(--gold);}
+  .tab.active{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+  }
+  :root[data-theme="dark"] .tab.active,
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tab.active{ background:var(--gold); border-color:var(--gold); color:#1B2A4A; } }
+
+  .status-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:18px 0 8px;
+    font-size:13px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:width .25s ease;
+  }
+
+  .stage{
+    perspective:1600px;
+    margin:18px 0 20px;
+  }
+  .card{
+    position:relative;
+    width:100%;
+    min-height:260px;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1);
+  }
+  .card.flipped{transform:rotateY(180deg);}
+  .face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    border-radius:18px;
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(27,42,74,.12);
+    border:1px solid var(--border);
+  }
+  .face.front{
+    background:var(--card-bg);
+    color:var(--ink);
+  }
+  .face.back{
+    background:var(--card-back-bg);
+    color:#fdf6e9;
+    transform:rotateY(180deg);
+  }
+  .face-label{
+    position:absolute;
+    top:16px;
+    left:18px;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:700;
+    opacity:.55;
+  }
+  .group-chip{
+    position:absolute;
+    top:14px;
+    right:16px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    background:var(--gold);
+    color:#1B2A4A;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .term{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(22px,4.2vw,30px);
+    font-weight:700;
+    line-height:1.25;
+  }
+  .hint{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--muted);
+    letter-spacing:.02em;
+  }
+  .face.back .hint{color:#cbd6ef;}
+  .definition{
+    font-size:17px;
+    line-height:1.5;
+    font-weight:500;
+  }
+  .detail{
+    margin-top:12px;
+    font-size:14px;
+    line-height:1.5;
+    color:#cbd6ef;
+    font-style:italic;
+  }
+
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:6px;
+  }
+  button{
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--ink);
+    padding:10px 16px;
+    cursor:pointer;
+    transition:transform .1s ease, border-color .15s ease, background .15s ease;
+  }
+  button:hover{border-color:var(--gold);}
+  button:active{transform:scale(.97);}
+  .btn-primary{
+    background:var(--navy);
+    color:#fff;
+    border-color:var(--navy);
+  }
+  .btn-got{
+    background:var(--green);
+    color:#fff;
+    border-color:var(--green);
+  }
+  .btn-again{
+    background:var(--danger);
+    color:#fff;
+    border-color:var(--danger);
+  }
+  .grade-row{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:16px;
+  }
+  .grade-row button{
+    flex:1;
+    max-width:220px;
+    padding:13px 16px;
+    font-size:15px;
+  }
+  .toolbar{
+    margin-top:22px;
+    padding-top:18px;
+    border-top:1px solid var(--border);
+  }
+  .toolbar .controls{margin-top:10px;}
+  .mode-toggle{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:4px;
+  }
+  .mode-toggle button{padding:7px 14px;font-size:13px;}
+  .mode-toggle button.active{
+    background:var(--navy);
+    color:#fff;
+    border-color:var(--navy);
+  }
+
+  .kbd-hint{
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    margin-top:18px;
+    line-height:1.6;
+  }
+  kbd{
+    font-family:inherit;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    font-size:11px;
+  }
+
+  .complete{
+    text-align:center;
+    padding:48px 20px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+  }
+  .complete h2{
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+    margin:0 0 10px;
+  }
+  .complete p{color:var(--muted);margin:0 0 20px;}
+
+  .hidden{display:none !important;}
+
+  footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:12.5px;
+    color:var(--muted);
+    font-style:italic;
+  }
+
+  @media (max-width:480px){
+    .face{padding:22px;}
+    .grade-row{flex-direction:column;}
+    .grade-row button{max-width:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Reader Bonus · Done With Hourly</div>
+    <h1>50 Medical Terms to Know</h1>
+    <p class="sub">The vocabulary Chapter 5 says every coder needs: word parts, body-system terms, high-risk spellings, and the billing jargon that shows up on real claims.</p>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="status-row">
+    <span id="cardCounter">Card 1 of 50</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span id="masteredCount">0 mastered</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="card" id="card">
+      <div class="face front">
+        <span class="face-label">Term</span>
+        <span class="group-chip" id="chipFront"></span>
+        <div class="term" id="termText"></div>
+        <div class="hint">Tap or press Enter to flip</div>
+      </div>
+      <div class="face back">
+        <span class="face-label">Definition</span>
+        <span class="group-chip" id="chipBack"></span>
+        <div class="definition" id="defText"></div>
+        <div class="detail" id="detailText"></div>
+        <div class="hint">1 = Got it · 2 = Again</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grade-row" id="gradeRow">
+    <button class="btn-again" id="btnAgain">↺ Again</button>
+    <button class="btn-got" id="btnGot">✓ Got it</button>
+  </div>
+
+  <div class="controls">
+    <button id="btnPrev">← Prev</button>
+    <button id="btnFlip" class="btn-primary">Flip</button>
+    <button id="btnNext">Next →</button>
+  </div>
+
+  <div id="completeScreen" class="complete hidden">
+    <h2 id="completeTitle">Deck cleared 🎉</h2>
+    <p id="completeSub">Every card in this view has been marked "Got it."</p>
+    <div class="controls">
+      <button class="btn-primary" id="btnReviewMissedFromComplete">Review Missed</button>
+      <button id="btnRestartFromComplete">Restart Deck</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="mode-toggle">
+      <button id="modeAll" class="active">All Cards</button>
+      <button id="modeMissed">Missed Only</button>
+    </div>
+    <div class="controls">
+      <button id="btnShuffle">🔀 Shuffle</button>
+      <button id="btnReset">↺ Reset Progress</button>
+      <button id="btnRestart">⟲ Restart Deck</button>
+    </div>
+  </div>
+
+  <div class="kbd-hint">
+    <kbd>→</kbd>/<kbd>l</kbd> next &nbsp; <kbd>←</kbd>/<kbd>h</kbd> prev &nbsp; <kbd>Enter</kbd>/<kbd>Space</kbd> flip &nbsp; <kbd>1</kbd> got it &nbsp; <kbd>2</kbd> again
+  </div>
+
+  <footer>A free bonus for readers of Done With Hourly, by Simon Grace</footer>
+</div>
+
+<script>
+const cards = [
+  // Prefixes
+  { group: "Prefixes", front: "Endo-", back: "Inside, within", detail: "e.g. endoscopy — looking inside the body" },
+  { group: "Prefixes", front: "Hypo-", back: "Low, under", detail: "e.g. hypotension — low blood pressure" },
+  { group: "Prefixes", front: "Pre-", back: "Before", detail: "e.g. preoperative — before surgery" },
+  { group: "Prefixes", front: "Hyper-", back: "High, above", detail: "e.g. hypertension — high blood pressure" },
+  { group: "Prefixes", front: "Tachy-", back: "Fast", detail: "e.g. tachycardia — abnormally fast heart rate" },
+  { group: "Prefixes", front: "Inter-", back: "Between", detail: "e.g. intercostal — between the ribs" },
+  { group: "Prefixes", front: "Brady-", back: "Slow", detail: "e.g. bradycardia — abnormally slow heart rate" },
+  { group: "Prefixes", front: "Exo-", back: "Outside", detail: "opposite of endo-" },
+  { group: "Prefixes", front: "Post-", back: "After", detail: "e.g. postoperative — after surgery" },
+  { group: "Prefixes", front: "Neo-", back: "New", detail: "e.g. neonatal — newborn" },
+
+  // Suffixes
+  { group: "Suffixes", front: "-algia", back: "Pain", detail: "e.g. neuralgia — nerve pain" },
+  { group: "Suffixes", front: "-ectomy", back: "Surgical removal", detail: "e.g. appendectomy — removal of the appendix" },
+  { group: "Suffixes", front: "-graphy", back: "Process of recording", detail: "e.g. radiography" },
+  { group: "Suffixes", front: "-itis", back: "Inflammation", detail: "e.g. arthritis — inflammation of the joints" },
+  { group: "Suffixes", front: "-ology", back: "Study of", detail: "e.g. cardiology — the study of the heart" },
+  { group: "Suffixes", front: "-opathy", back: "Disease or condition", detail: "e.g. cardiomyopathy — disease of the heart muscle" },
+  { group: "Suffixes", front: "-osis", back: "Abnormal condition", detail: "e.g. cirrhosis — a liver disease" },
+  { group: "Suffixes", front: "-plasty", back: "Surgical repair", detail: "e.g. rhinoplasty" },
+  { group: "Suffixes", front: "-rrhea", back: "Flow, discharge", detail: "e.g. diarrhea" },
+  { group: "Suffixes", front: "-sclerosis", back: "Hardening", detail: "e.g. atherosclerosis" },
+
+  // Root Words
+  { group: "Root Words", front: "Cardi-", back: "Heart", detail: "e.g. cardiology, cardiomyopathy" },
+  { group: "Root Words", front: "Dermat-", back: "Skin", detail: "e.g. dermatitis — inflammation of the skin" },
+  { group: "Root Words", front: "Gastro-", back: "Stomach", detail: "e.g. gastritis — inflammation of the stomach lining" },
+
+  // Body Systems & Conditions
+  { group: "Body Systems", front: "Myocardial infarction", back: "Heart attack", detail: "Cardiovascular system" },
+  { group: "Body Systems", front: "Arrhythmia", back: "Irregular heartbeat", detail: "Cardiovascular system · also a high-risk spelling (not \"arhythmia\")" },
+  { group: "Body Systems", front: "Hypertension", back: "High blood pressure", detail: "Cardiovascular system" },
+  { group: "Body Systems", front: "Pneumonia", back: "Inflammation or infection of the lungs", detail: "Respiratory system" },
+  { group: "Body Systems", front: "Asthma", back: "Chronic condition in which the airways constrict, making it difficult to breathe", detail: "Respiratory system" },
+  { group: "Body Systems", front: "Bronchitis", back: "Inflammation of the bronchial tubes", detail: "Respiratory system, typically due to infection or irritation" },
+  { group: "Body Systems", front: "Dermatitis", back: "Inflammation of the skin", detail: "Integumentary system" },
+  { group: "Body Systems", front: "Psoriasis", back: "A chronic skin condition that leads to red, scaly patches", detail: "Integumentary system" },
+  { group: "Body Systems", front: "Melanoma", back: "A type of skin cancer", detail: "Integumentary system" },
+  { group: "Body Systems", front: "Fracture", back: "A break in the bone", detail: "Musculoskeletal system" },
+  { group: "Body Systems", front: "Osteoarthritis", back: "A form of arthritis caused by the breakdown of cartilage in the joints", detail: "Musculoskeletal system" },
+  { group: "Body Systems", front: "Osteoporosis", back: "A condition that weakens bones, making them more susceptible to fractures", detail: "Musculoskeletal system" },
+
+  // High-Risk Terms
+  { group: "High-Risk Terms", front: "Choledocholithiasis", back: "Gallstones in the bile duct", detail: "Frequently misspelled due to its length and complexity" },
+  { group: "High-Risk Terms", front: "Perineum", back: "The area between the genitals and anus", detail: "Commonly misspelled as \"perinium\"" },
+  { group: "High-Risk Terms", front: "Abscess", back: "A collection of pus", detail: "Easily confused with \"access\"" },
+
+  // Abbreviations
+  { group: "Abbreviations", front: "D/C", back: "Discharge", detail: "Standard clinical documentation abbreviation" },
+  { group: "Abbreviations", front: "NPO", back: "Nothing by mouth", detail: "From the Latin nil per os" },
+  { group: "Abbreviations", front: "BID", back: "Twice a day", detail: "Medication frequency abbreviation" },
+  { group: "Abbreviations", front: "TID", back: "Three times a day", detail: "Medication frequency abbreviation" },
+  { group: "Abbreviations", front: "PRN", back: "As needed", detail: "Medication frequency abbreviation" },
+
+  // Billing & Compliance
+  { group: "Billing & Compliance", front: "SOAP note", back: "Subjective, Objective, Assessment, Plan", detail: "The standard structure for documenting a patient visit" },
+  { group: "Billing & Compliance", front: "Prior authorization", back: "The insurance company's approval to proceed with a specific service before it's rendered", detail: "Required before many non-emergency services" },
+  { group: "Billing & Compliance", front: "Deductible", back: "The amount a patient must pay out-of-pocket for healthcare services before insurance starts covering costs", detail: "Typically resets annually" },
+  { group: "Billing & Compliance", front: "Copayment (copay)", back: "A fixed amount a patient pays for a specific service at the time it's provided", detail: "Usually due upfront, e.g. a $20 office-visit copay" },
+  { group: "Billing & Compliance", front: "EOB", back: "Explanation of Benefits — a document showing how insurance processed a claim and what the patient owes", detail: "Not a bill itself, but explains one" },
+  { group: "Billing & Compliance", front: "Clearinghouse", back: "A third party that receives claims, checks them for errors, then forwards them to the insurance company", detail: "Catches missing info or invalid codes before the payer sees the claim" },
+  { group: "Billing & Compliance", front: "Unbundling", back: "Billing separately for services that should be billed together as one comprehensive service", detail: "A compliance risk that can trigger audits and penalties" }
+];
+
+const groups = ["All", ...Array.from(new Set(cards.map(c => c.group)))];
+
+let queue = cards.map((c, i) => i);
+let missed = new Set();
+let masteredInView = new Set();
+let currentGroup = "All";
+let currentMode = "all"; // "all" | "missed"
+let pos = 0;
+let isFlipped = false;
+
+const tabsEl = document.getElementById('tabs');
+const cardEl = document.getElementById('card');
+const termText = document.getElementById('termText');
+const defText = document.getElementById('defText');
+const detailText = document.getElementById('detailText');
+const chipFront = document.getElementById('chipFront');
+const chipBack = document.getElementById('chipBack');
+const cardCounter = document.getElementById('cardCounter');
+const masteredCountEl = document.getElementById('masteredCount');
+const progressFill = document.getElementById('progressFill');
+const stage = document.getElementById('stage');
+const gradeRow = document.getElementById('gradeRow');
+const completeScreen = document.getElementById('completeScreen');
+const completeTitle = document.getElementById('completeTitle');
+const completeSub = document.getElementById('completeSub');
+const modeAllBtn = document.getElementById('modeAll');
+const modeMissedBtn = document.getElementById('modeMissed');
+
+function activeIndices(){
+  let idxs = cards.map((c, i) => i);
+  if (currentGroup !== "All") idxs = idxs.filter(i => cards[i].group === currentGroup);
+  if (currentMode === "missed") idxs = idxs.filter(i => missed.has(i));
+  return idxs;
+}
+
+function buildTabs(){
+  tabsEl.innerHTML = "";
+  groups.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (g === currentGroup ? ' active' : '');
+    btn.textContent = g;
+    btn.addEventListener('click', () => {
+      currentGroup = g;
+      startQueue();
+      buildTabs();
+    });
+    tabsEl.appendChild(btn);
+  });
+}
+
+function startQueue(){
+  queue = activeIndices();
+  pos = 0;
+  isFlipped = false;
+  masteredInView = new Set();
+  cardEl.classList.remove('flipped');
+  completeScreen.classList.add('hidden');
+  stage.classList.remove('hidden');
+  gradeRow.classList.remove('hidden');
+  document.querySelector('.controls').classList.remove('hidden');
+  render();
+}
+
+function render(){
+  if (queue.length === 0){
+    showComplete(true);
+    return;
+  }
+  if (pos >= queue.length) pos = 0;
+  const idx = queue[pos];
+  const c = cards[idx];
+  termText.textContent = c.front;
+  defText.textContent = c.back;
+  detailText.textContent = c.detail || "";
+  chipFront.textContent = c.group;
+  chipBack.textContent = c.group;
+  cardCounter.textContent = `Card ${pos + 1} of ${queue.length}`;
+  masteredCountEl.textContent = `${masteredInView.size} mastered`;
+  const total = queue.length + masteredInView.size;
+  const pct = total ? Math.round((masteredInView.size / total) * 100) : 0;
+  progressFill.style.width = pct + "%";
+}
+
+function showComplete(cleared){
+  stage.classList.add('hidden');
+  gradeRow.classList.add('hidden');
+  completeScreen.classList.remove('hidden');
+  if (cleared){
+    completeTitle.textContent = currentMode === "missed" ? "Missed cards cleared 🎉" : "Deck cleared 🎉";
+    completeSub.textContent = missed.size > 0
+      ? `${missed.size} card${missed.size === 1 ? '' : 's'} still need review.`
+      : "Every card has been marked \"Got it.\"";
+  }
+}
+
+function flip(){
+  isFlipped = !isFlipped;
+  cardEl.classList.toggle('flipped', isFlipped);
+}
+
+function next(){
+  if (queue.length === 0) return;
+  isFlipped = false;
+  cardEl.classList.remove('flipped');
+  pos = (pos + 1) % queue.length;
+  render();
+}
+
+function prev(){
+  if (queue.length === 0) return;
+  isFlipped = false;
+  cardEl.classList.remove('flipped');
+  pos = (pos - 1 + queue.length) % queue.length;
+  render();
+}
+
+function grade(gotIt){
+  if (queue.length === 0) return;
+  const idx = queue[pos];
+  if (gotIt){
+    missed.delete(idx);
+    masteredInView.add(idx);
+    queue.splice(pos, 1);
+  } else {
+    missed.add(idx);
+    pos = (pos + 1) % Math.max(queue.length, 1);
+  }
+  isFlipped = false;
+  cardEl.classList.remove('flipped');
+  if (queue.length === 0){
+    showComplete(true);
+  } else {
+    if (pos >= queue.length) pos = 0;
+    render();
+  }
+}
+
+function shuffle(){
+  for (let i = queue.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  pos = 0;
+  isFlipped = false;
+  cardEl.classList.remove('flipped');
+  render();
+}
+
+document.getElementById('btnFlip').addEventListener('click', flip);
+cardEl.addEventListener('click', flip);
+document.getElementById('btnNext').addEventListener('click', next);
+document.getElementById('btnPrev').addEventListener('click', prev);
+document.getElementById('btnGot').addEventListener('click', () => grade(true));
+document.getElementById('btnAgain').addEventListener('click', () => grade(false));
+document.getElementById('btnShuffle').addEventListener('click', shuffle);
+document.getElementById('btnReset').addEventListener('click', () => { missed.clear(); startQueue(); });
+document.getElementById('btnRestart').addEventListener('click', startQueue);
+document.getElementById('btnRestartFromComplete').addEventListener('click', startQueue);
+document.getElementById('btnReviewMissedFromComplete').addEventListener('click', () => {
+  currentMode = "missed";
+  modeMissedBtn.classList.add('active');
+  modeAllBtn.classList.remove('active');
+  startQueue();
+});
+
+modeAllBtn.addEventListener('click', () => {
+  currentMode = "all";
+  modeAllBtn.classList.add('active');
+  modeMissedBtn.classList.remove('active');
+  startQueue();
+});
+modeMissedBtn.addEventListener('click', () => {
+  currentMode = "missed";
+  modeMissedBtn.classList.add('active');
+  modeAllBtn.classList.remove('active');
+  startQueue();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+  switch(e.key){
+    case 'ArrowRight': case 'l': next(); break;
+    case 'ArrowLeft': case 'h': prev(); break;
+    case 'Enter': case ' ': e.preventDefault(); flip(); break;
+    case '1': if (isFlipped) grade(true); break;
+    case '2': if (isFlipped) grade(false); break;
+  }
+});
+
+buildTabs();
+startQueue();
+</script>
+</body>
+</html>
